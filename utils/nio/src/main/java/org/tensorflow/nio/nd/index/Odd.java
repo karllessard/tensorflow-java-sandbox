@@ -17,11 +17,9 @@
 package org.tensorflow.nio.nd.index;
 
 import org.tensorflow.nio.nd.impl.dimension.Dimension;
-import org.tensorflow.nio.nd.impl.dimension.Dimensions;
 
 /**
- * An index that returns only elements found at an odd position in the
- * original dimension.
+ * An index that returns only elements found at an odd position in the original dimension.
  *
  * <p>For example, given a vector with {@code n} elements on the {@code x} axis, and n is even,
  * {@code odd()} returns x<sub>1</sub>, x<sub>3</sub>, ..., x<sub>n-1</sub>

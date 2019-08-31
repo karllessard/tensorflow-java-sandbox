@@ -17,12 +17,14 @@
 package org.tensorflow.nio.nd.impl.dimension;
 
 public interface Dimension {
-  
+
   long numElements();
-  
+
   long positionOf(long coord);
-  
-  default long position() { return positionOf(0); }
-  
+
+  default long position() {
+    return positionOf(0);
+  }
+
   boolean isSegmented();
 }

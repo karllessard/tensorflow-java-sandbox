@@ -26,8 +26,8 @@ import org.tensorflow.nio.nd.impl.dimension.Dimensions;
  * single element and therefore is excluded from the computation of the rank.
  *
  * <p>For example, given a 3D matrix on the axis [x, y, z], if
- * {@code matrix.slice(all(), at(0), at(0)}, then the rank of the returned slice is 1 and its
- * number of elements is {@code x.numElements()}
+ * {@code matrix.slice(all(), at(0), at(0)}, then the rank of the returned slice is 1 and its number
+ * of elements is {@code x.numElements()}
  */
 class At implements Index {
 
@@ -38,7 +38,10 @@ class At implements Index {
 
   @Override
   public long mapCoordinate(long coordinate, Dimension dim) {
-    return value;  // TODO Validate that coordinate is 0?
+    if (coordinate != 0) {
+      throw new IllegalArgumentException("`at` indices only has one coordinate, which is 0");
+    }
+    return value;
   }
 
   @Override

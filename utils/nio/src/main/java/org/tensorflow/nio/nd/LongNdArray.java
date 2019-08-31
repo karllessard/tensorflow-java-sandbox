@@ -28,13 +28,14 @@ public interface LongNdArray extends NdArray<Long> {
   /**
    * Reads the content of this N-dimensional array into the destination long array.
    *
-   * <p>The size of the destination array must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
+   * <p>The size of the destination array must be equal or greater to the {@link #size()} of this
+   * array, or an exception is thrown. After the copy, content of the both arrays can be altered
    * independently, without affecting each other.
    *
    * @param dst the destination array
    * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
+   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of
+   * this array
    */
   default LongNdArray read(long[] dst) {
     return read(DataBuffers.wrap(dst, false));
@@ -50,7 +51,8 @@ public interface LongNdArray extends NdArray<Long> {
    * @param dst the destination array
    * @param offset the index of the first long to write in the destination array
    * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
+   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of
+   * this array
    * @throws IllegalArgumentException if offset is greater than dst length or is negative
    */
   default LongNdArray read(long[] dst, int offset) {
@@ -66,7 +68,8 @@ public interface LongNdArray extends NdArray<Long> {
    *
    * @param src the source array
    * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
+   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size
+   * of this array
    */
   default LongNdArray write(long[] src) {
     return write(DataBuffers.wrap(src, false));
@@ -82,7 +85,8 @@ public interface LongNdArray extends NdArray<Long> {
    * @param src the source array
    * @param offset the index of the first long to read from the source array
    * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
+   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size
+   * of this array
    * @throws IllegalArgumentException if offset is greater than src length or is negative
    */
   default LongNdArray write(long[] src, int offset) {
@@ -90,7 +94,7 @@ public interface LongNdArray extends NdArray<Long> {
   }
 
   @Override
-  LongNdArray at(long... indices);
+  LongNdArray at(long... coordinates);
 
   @Override
   LongNdArray slice(Index... indices);
@@ -99,7 +103,7 @@ public interface LongNdArray extends NdArray<Long> {
   Iterable<LongNdArray> childElements();
 
   @Override
-  LongNdArray set(Long value, long... indices);
+  LongNdArray set(Long value, long... coordinates);
 
   @Override
   LongNdArray copyTo(NdArray<Long> dst);

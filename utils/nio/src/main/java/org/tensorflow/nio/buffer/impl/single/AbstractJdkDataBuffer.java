@@ -24,7 +24,7 @@ import org.tensorflow.nio.buffer.DataBuffer;
 
 /**
  * Base class for all JDK-based data buffers.
- * 
+ *
  * @param <T> type of elements (or values) stored in this buffer
  * @param <U> the {@link DataBuffer} variant implemented by the subclass extending this base class
  */
@@ -45,8 +45,8 @@ abstract class AbstractJdkDataBuffer<T, U extends DataBuffer<T>> extends Abstrac
 
   @Override
   public U limit(long newLimit) {
-    buf().limit((int)newLimit);
-    return (U)this;
+    buf().limit((int) newLimit);
+    return (U) this;
   }
 
   @Override
@@ -66,14 +66,14 @@ abstract class AbstractJdkDataBuffer<T, U extends DataBuffer<T>> extends Abstrac
 
   @Override
   public U position(long newPosition) {
-    buf().position((int)newPosition);
-    return (U)this;
+    buf().position((int) newPosition);
+    return (U) this;
   }
 
   @Override
   public U rewind() {
     buf().rewind();
-    return (U)this;
+    return (U) this;
   }
 
   @Override

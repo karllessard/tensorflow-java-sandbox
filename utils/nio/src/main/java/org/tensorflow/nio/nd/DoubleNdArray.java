@@ -28,13 +28,14 @@ public interface DoubleNdArray extends NdArray<Double> {
   /**
    * Reads the content of this N-dimensional array into the destination double array.
    *
-   * <p>The size of the destination array must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
+   * <p>The size of the destination array must be equal or greater to the {@link #size()} of this
+   * array, or an exception is thrown. After the copy, content of the both arrays can be altered
    * independently, without affecting each other.
    *
    * @param dst the destination array
    * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
+   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of
+   * this array
    */
   default DoubleNdArray read(double[] dst) {
     return read(DataBuffers.wrap(dst, false));
@@ -50,7 +51,8 @@ public interface DoubleNdArray extends NdArray<Double> {
    * @param dst the destination array
    * @param offset the index of the first double to write in the destination array
    * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
+   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of
+   * this array
    * @throws IllegalArgumentException if offset is greater than dst length or is negative
    */
   default DoubleNdArray read(double[] dst, int offset) {
@@ -66,7 +68,8 @@ public interface DoubleNdArray extends NdArray<Double> {
    *
    * @param src the source array
    * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
+   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size
+   * of this array
    */
   default DoubleNdArray write(double[] src) {
     return write(DataBuffers.wrap(src, false));
@@ -82,7 +85,8 @@ public interface DoubleNdArray extends NdArray<Double> {
    * @param src the source array
    * @param offset the index of the first double to read from the source array
    * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
+   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size
+   * of this array
    * @throws IllegalArgumentException if offset is greater than src length or is negative
    */
   default DoubleNdArray write(double[] src, int offset) {
@@ -90,8 +94,8 @@ public interface DoubleNdArray extends NdArray<Double> {
   }
 
   @Override
-  DoubleNdArray at(long... indices);
-  
+  DoubleNdArray at(long... coordinates);
+
   @Override
   DoubleNdArray slice(Index... indices);
 
@@ -99,7 +103,7 @@ public interface DoubleNdArray extends NdArray<Double> {
   Iterable<DoubleNdArray> childElements();
 
   @Override
-  DoubleNdArray set(Double value, long... indices);
+  DoubleNdArray set(Double value, long... coordinates);
 
   @Override
   DoubleNdArray copyTo(NdArray<Double> dst);

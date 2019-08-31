@@ -27,7 +27,8 @@ import org.tensorflow.nio.buffer.impl.AbstractDataBuffer;
 import org.tensorflow.nio.buffer.DataBuffer;
 
 @SuppressWarnings("unchecked")
-abstract class AbstractLargeDataBuffer<T, B extends DataBuffer<T>> extends AbstractDataBuffer<T, B> {
+abstract class AbstractLargeDataBuffer<T, B extends DataBuffer<T>> extends
+    AbstractDataBuffer<T, B> {
 
   @Override
   public long capacity() {
@@ -47,7 +48,7 @@ abstract class AbstractLargeDataBuffer<T, B extends DataBuffer<T>> extends Abstr
       onPositionChange(newLimit);
     }
     limit = newLimit;
-    return (B)this;
+    return (B) this;
   }
 
   @Override
@@ -70,16 +71,16 @@ abstract class AbstractLargeDataBuffer<T, B extends DataBuffer<T>> extends Abstr
     Validator.newPosition(this, newPosition);
     resetBuffers(newPosition, B::position);
     onPositionChange(newPosition);
-    return (B)this;
+    return (B) this;
   }
 
   @Override
   public B rewind() {
     currentBufferIndex = 0;
-    for (B buffer: buffers) {
+    for (B buffer : buffers) {
       buffer.rewind();
     }
-    return (B)this;
+    return (B) this;
   }
 
   @Override
@@ -97,7 +98,7 @@ abstract class AbstractLargeDataBuffer<T, B extends DataBuffer<T>> extends Abstr
   @Override
   public T get(long index) {
     Validator.getArgs(this, index);
-    return buffers[(int)(index / bufferMaxCapacity)].get(index % bufferMaxCapacity);
+    return buffers[(int) (index / bufferMaxCapacity)].get(index % bufferMaxCapacity);
   }
 
   @Override
@@ -116,16 +117,16 @@ abstract class AbstractLargeDataBuffer<T, B extends DataBuffer<T>> extends Abstr
     }
     currentBuffer().put(value);
     onPositionChange(position());
-    return (B)this;
+    return (B) this;
   }
 
   @Override
   public B put(long index, T value) {
     Validator.putArgs(this, index);
-    buffers[(int)(index / bufferMaxCapacity)].put(index % bufferMaxCapacity, value);
-    return (B)this;
+    buffers[(int) (index / bufferMaxCapacity)].put(index % bufferMaxCapacity, value);
+    return (B) this;
   }
-  
+
   @Override
   public B put(DataBuffer<T> src) {
     Validator.putArgs(this, src);
@@ -143,21 +144,25 @@ abstract class AbstractLargeDataBuffer<T, B extends DataBuffer<T>> extends Abstr
         srcRemaining = 0;
       }
     }
-    return (B)this;
+    return (B) this;
   }
 
   @Override
   public B duplicate() {
-    B[] duplicateBuffers = Arrays.stream(buffers).map(b -> (B)b.duplicate()).toArray(i -> Arrays.copyOf(buffers, i));
+    B[] duplicateBuffers = Arrays.stream(buffers).map(b -> (B) b.duplicate())
+        .toArray(i -> Arrays.copyOf(buffers, i));
     return instantiate(duplicateBuffers, readOnly, capacity, limit, currentBufferIndex);
   }
 
-  abstract B instantiate(B[] buffers, boolean readOnly, long capacity, long limit, int currentBufferIndex);
+  abstract B instantiate(B[] buffers, boolean readOnly, long capacity, long limit,
+      int currentBufferIndex);
 
-  static <B extends DataBuffer<?>> B[] allocateBuffers(Class<B> bufferClazz, long capacity, long bufferMaxCapacity, Function<Long, B> allocator) {
-    int nbMaxedBuffers = (int)(capacity / bufferMaxCapacity);
+  static <B extends DataBuffer<?>> B[] allocateBuffers(Class<B> bufferClazz, long capacity,
+      long bufferMaxCapacity, Function<Long, B> allocator) {
+    int nbMaxedBuffers = (int) (capacity / bufferMaxCapacity);
     long remaining = capacity % bufferMaxCapacity;
-    B[] buffers = (B[]) Array.newInstance(bufferClazz, (remaining > 0 || nbMaxedBuffers == 0) ? nbMaxedBuffers + 1 : nbMaxedBuffers);
+    B[] buffers = (B[]) Array.newInstance(bufferClazz,
+        (remaining > 0 || nbMaxedBuffers == 0) ? nbMaxedBuffers + 1 : nbMaxedBuffers);
     int bufferIdx = 0;
     while (bufferIdx < nbMaxedBuffers) {
       buffers[bufferIdx++] = allocator.apply(bufferMaxCapacity);
@@ -169,11 +174,14 @@ abstract class AbstractLargeDataBuffer<T, B extends DataBuffer<T>> extends Abstr
   }
 
   AbstractLargeDataBuffer(B[] buffers, boolean readOnly) {
-    this(buffers, readOnly, (buffers[0].capacity() * (buffers.length - 1)) + buffers[buffers.length - 1].capacity(), 0, 0);
+    this(buffers, readOnly,
+        (buffers[0].capacity() * (buffers.length - 1)) + buffers[buffers.length - 1].capacity(), 0,
+        0);
     limit = capacity;
   }
 
-  AbstractLargeDataBuffer(B[] buffers, boolean readOnly, long capacity, long limit, int currentBufferIndex) {
+  AbstractLargeDataBuffer(B[] buffers, boolean readOnly, long capacity, long limit,
+      int currentBufferIndex) {
     if (buffers.length == 0) {
       throw new IllegalArgumentException("Buffers list cannot be empty");
     }
@@ -198,15 +206,16 @@ abstract class AbstractLargeDataBuffer<T, B extends DataBuffer<T>> extends Abstr
   }
 
   interface ArrayCopy<T> {
+
     void accept(DataBuffer<T> buf, int offset, int length);
   }
 
   void copyArray(int offset, int length, ArrayCopy<T> arrayCopy) {
     final int endIndex = offset + length;
-    for (int index = offset; index < endIndex;) {
+    for (int index = offset; index < endIndex; ) {
       int copyLength = endIndex - index;
       B buffer = buffers[currentBufferIndex];
-      int bufferRemaining = (int)buffer.remaining();
+      int bufferRemaining = (int) buffer.remaining();
       if (bufferRemaining < copyLength) {
         copyLength = bufferRemaining;
         ++currentBufferIndex;
@@ -225,7 +234,7 @@ abstract class AbstractLargeDataBuffer<T, B extends DataBuffer<T>> extends Abstr
 
   private void resetBuffers(long start, BiConsumer<B, Long> resetAction) {
     long remaining = start;
-    for (B buffer: buffers) {
+    for (B buffer : buffers) {
       long resetValue;
       if (remaining > bufferMaxCapacity) {
         resetValue = bufferMaxCapacity;
@@ -238,6 +247,6 @@ abstract class AbstractLargeDataBuffer<T, B extends DataBuffer<T>> extends Abstr
   }
 
   private void onPositionChange(long position) {
-    currentBufferIndex = Math.min((int)(position / bufferMaxCapacity), buffers.length - 1);
+    currentBufferIndex = Math.min((int) (position / bufferMaxCapacity), buffers.length - 1);
   }
 }

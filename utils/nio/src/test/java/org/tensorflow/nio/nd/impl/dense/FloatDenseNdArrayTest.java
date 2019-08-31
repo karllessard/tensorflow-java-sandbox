@@ -25,11 +25,13 @@ import org.tensorflow.nio.nd.Shape;
 
 public class FloatDenseNdArrayTest extends FloatNdArrayTestBase {
 
-  @Override protected FloatNdArray allocate(Shape shape) {
+  @Override
+  protected FloatNdArray allocate(Shape shape) {
     return NdArrays.ofFloats(shape);
   }
 
-  @Override protected DataBuffer<Float> allocateBuffer(long capacity) {
+  @Override
+  protected DataBuffer<Float> allocateBuffer(long capacity) {
     return DataBuffers.ofFloats(capacity);
   }
 }

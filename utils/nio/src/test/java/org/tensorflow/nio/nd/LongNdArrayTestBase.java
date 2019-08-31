@@ -26,94 +26,95 @@ import org.junit.Test;
 
 public abstract class LongNdArrayTestBase extends NdArrayTestBase<Long> {
 
-    @Override
-    protected abstract LongNdArray allocate(Shape shape);
+  @Override
+  protected abstract LongNdArray allocate(Shape shape);
 
-    @Override
-    protected Long valueOf(Long val) {
-        return val;
+  @Override
+  protected Long valueOf(Long val) {
+    return val;
+  }
+
+  @Test
+  public void writeAndReadWithPrimitiveArrays() {
+    long[] values = new long[]{0L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L, 14L,
+        15L};
+
+    LongNdArray matrix = allocate(Shape.make(3, 4));
+    matrix.write(values);
+    assertEquals(Long.valueOf(0L), matrix.get(0, 0));
+    assertEquals(Long.valueOf(3L), matrix.get(0, 3));
+    assertEquals(Long.valueOf(4L), matrix.get(1, 0));
+    assertEquals(Long.valueOf(11L), matrix.get(2, 3));
+
+    matrix.write(values, 4);
+    assertEquals(Long.valueOf(4L), matrix.get(0, 0));
+    assertEquals(Long.valueOf(7L), matrix.get(0, 3));
+    assertEquals(Long.valueOf(8L), matrix.get(1, 0));
+    assertEquals(Long.valueOf(15L), matrix.get(2, 3));
+
+    matrix.set(100L, 1, 0);
+    matrix.read(values, 2);
+    assertEquals(4L, values[2]);
+    assertEquals(7L, values[5]);
+    assertEquals(100L, values[6]);
+    assertEquals(15L, values[13]);
+    assertEquals(15L, values[15]);
+
+    matrix.read(values);
+    assertEquals(4L, values[0]);
+    assertEquals(7L, values[3]);
+    assertEquals(100L, values[4]);
+    assertEquals(15L, values[11]);
+    assertEquals(15L, values[13]);
+    assertEquals(15L, values[15]);
+
+    try {
+      matrix.write(new long[]{1, 2, 3, 4});
+      fail();
+    } catch (BufferUnderflowException e) {
+      // as expected
     }
-
-    @Test
-    public void writeAndReadWithPrimitiveArrays() {
-        long[] values = new long[] { 0L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L, 14L, 15L };
-
-        LongNdArray matrix = allocate(Shape.create(3, 4));
-        matrix.write(values);
-        assertEquals(Long.valueOf(0L), matrix.get(0, 0));
-        assertEquals(Long.valueOf(3L), matrix.get(0, 3));
-        assertEquals(Long.valueOf(4L), matrix.get(1, 0));
-        assertEquals(Long.valueOf(11L), matrix.get(2, 3));
-
-        matrix.write(values, 4);
-        assertEquals(Long.valueOf(4L), matrix.get(0, 0));
-        assertEquals(Long.valueOf(7L), matrix.get(0, 3));
-        assertEquals(Long.valueOf(8L), matrix.get(1, 0));
-        assertEquals(Long.valueOf(15L), matrix.get(2, 3));
-
-        matrix.set(100L, 1, 0);
-        matrix.read(values, 2);
-        assertEquals(4L, values[2]);
-        assertEquals(7L, values[5]);
-        assertEquals(100L, values[6]);
-        assertEquals(15L, values[13]);
-        assertEquals(15L, values[15]);
-
-        matrix.read(values);
-        assertEquals(4L, values[0]);
-        assertEquals(7L, values[3]);
-        assertEquals(100L, values[4]);
-        assertEquals(15L, values[11]);
-        assertEquals(15L, values[13]);
-        assertEquals(15L, values[15]);
-
-        try {
-            matrix.write(new long[] { 1, 2, 3, 4 });
-            fail();
-        } catch (BufferUnderflowException e) {
-            // as expected
-        }
-        try {
-            matrix.write(values, values.length);
-            fail();
-        } catch (BufferUnderflowException e) {
-            // as expected
-        }
-        try {
-            matrix.write(values, -1);
-            fail();
-        } catch (IllegalArgumentException e) {
-            // as expected
-        }
-        try {
-            matrix.write(values, values.length + 1);
-            fail();
-        } catch (IllegalArgumentException e) {
-            // as expected
-        }
-        try {
-            matrix.read(new long[4]);
-            fail();
-        } catch (BufferOverflowException e) {
-            // as expected
-        }
-        try {
-            matrix.read(values, values.length);
-            fail();
-        } catch (BufferOverflowException e) {
-            // as expected
-        }
-        try {
-            matrix.read(values, -1);
-            fail();
-        } catch (IllegalArgumentException e) {
-            // as expected
-        }
-        try {
-            matrix.read(values, values.length + 1);
-            fail();
-        } catch (IllegalArgumentException e) {
-            // as expected
-        }
+    try {
+      matrix.write(values, values.length);
+      fail();
+    } catch (BufferUnderflowException e) {
+      // as expected
     }
+    try {
+      matrix.write(values, -1);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // as expected
+    }
+    try {
+      matrix.write(values, values.length + 1);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // as expected
+    }
+    try {
+      matrix.read(new long[4]);
+      fail();
+    } catch (BufferOverflowException e) {
+      // as expected
+    }
+    try {
+      matrix.read(values, values.length);
+      fail();
+    } catch (BufferOverflowException e) {
+      // as expected
+    }
+    try {
+      matrix.read(values, -1);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // as expected
+    }
+    try {
+      matrix.read(values, values.length + 1);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // as expected
+    }
+  }
 }

@@ -27,86 +27,86 @@ import org.junit.Test;
 
 public class ShapeTest {
 
-    @Test
-    public void allKnownDimensions() {
-        Shape shape = Shape.create(5, 4, 5);
-        assertEquals(3, shape.numDimensions());
-        assertEquals(5, shape.numElements(0));
-        assertEquals(4, shape.numElements(1));
-        assertEquals(5, shape.numElements(2));
-        assertEquals(100, shape.size());
-        assertArrayEquals(new long[] {5, 4, 5}, shape.toArray());
-        try {
-            shape.numElements(3);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-            // as expected
-        }
-        try {
-            shape.numElements(-1);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-            // as expected
-        }
-        assertNotNull(shape.dimension(0));
-        assertNotNull(shape.dimension(1));
-        assertNotNull(shape.dimension(2));
-        try {
-            shape.dimension(3);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-            // as expected
-        }
-        try {
-            shape.dimension(-1);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-            // as expected
-        }
-        Shape subshape = shape.subshape(1);
-        assertEquals(2, subshape.numDimensions());
-        assertEquals(4, subshape.numElements(0));
-        assertEquals(5, subshape.numElements(1));
-        assertArrayEquals(new long[] {4, 5}, subshape.toArray());
-        assertEquals(20, subshape.size());
-        try {
-            subshape.numElements(2);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-            //as expected
-        }
-        assertSame(shape.dimension(1), subshape.dimension(0));
-        assertSame(shape.dimension(2), subshape.dimension(1));
-        try {
-            subshape.dimension(3);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-            //as expected
-        }
+  @Test
+  public void allKnownDimensions() {
+    Shape shape = Shape.make(5, 4, 5);
+    assertEquals(3, shape.numDimensions());
+    assertEquals(5, shape.numElements(0));
+    assertEquals(4, shape.numElements(1));
+    assertEquals(5, shape.numElements(2));
+    assertEquals(100, shape.size());
+    assertArrayEquals(new long[]{5, 4, 5}, shape.toArray());
+    try {
+      shape.numElements(3);
+      fail();
+    } catch (IndexOutOfBoundsException e) {
+      // as expected
     }
-
-    @Test
-    public void hashCodeEquals() {
-        Shape shape1 = Shape.create(5, 4, 5);
-        Shape shape2 = Shape.create(5, 4, 5);
-        Shape shape3 = Shape.create(5, 4, 5, 6);
-        Shape shape4 = Shape.create(5, 4, 1);
-
-        assertEquals(shape1, shape2);
-        assertEquals(shape1.hashCode(), shape2.hashCode());
-        assertNotEquals(shape1, shape3);
-        assertNotEquals(shape1.hashCode(), shape3.hashCode());
-        assertNotEquals(shape1, shape4);
-        assertNotEquals(shape1.hashCode(), shape4.hashCode());
-
-        Shape scalar1 = Shape.create();
-        Shape scalar2 = Shape.create();
-        assertEquals(scalar1, scalar2);
-        assertNotEquals(scalar1, shape1);
-
-        Shape unknown1 = Shape.create(-1, 4, 5);
-        Shape unknown2 = Shape.create(-1, 4, 5);
-        assertNotEquals(unknown1, unknown2);
-        assertNotEquals(unknown1, shape1);
+    try {
+      shape.numElements(-1);
+      fail();
+    } catch (IndexOutOfBoundsException e) {
+      // as expected
     }
+    assertNotNull(shape.dimension(0));
+    assertNotNull(shape.dimension(1));
+    assertNotNull(shape.dimension(2));
+    try {
+      shape.dimension(3);
+      fail();
+    } catch (IndexOutOfBoundsException e) {
+      // as expected
+    }
+    try {
+      shape.dimension(-1);
+      fail();
+    } catch (IndexOutOfBoundsException e) {
+      // as expected
+    }
+    Shape subshape = shape.subshape(1);
+    assertEquals(2, subshape.numDimensions());
+    assertEquals(4, subshape.numElements(0));
+    assertEquals(5, subshape.numElements(1));
+    assertArrayEquals(new long[]{4, 5}, subshape.toArray());
+    assertEquals(20, subshape.size());
+    try {
+      subshape.numElements(2);
+      fail();
+    } catch (IndexOutOfBoundsException e) {
+      //as expected
+    }
+    assertSame(shape.dimension(1), subshape.dimension(0));
+    assertSame(shape.dimension(2), subshape.dimension(1));
+    try {
+      subshape.dimension(3);
+      fail();
+    } catch (IndexOutOfBoundsException e) {
+      //as expected
+    }
+  }
+
+  @Test
+  public void hashCodeEquals() {
+    Shape shape1 = Shape.make(5, 4, 5);
+    Shape shape2 = Shape.make(5, 4, 5);
+    Shape shape3 = Shape.make(5, 4, 5, 6);
+    Shape shape4 = Shape.make(5, 4, 1);
+
+    assertEquals(shape1, shape2);
+    assertEquals(shape1.hashCode(), shape2.hashCode());
+    assertNotEquals(shape1, shape3);
+    assertNotEquals(shape1.hashCode(), shape3.hashCode());
+    assertNotEquals(shape1, shape4);
+    assertNotEquals(shape1.hashCode(), shape4.hashCode());
+
+    Shape scalar1 = Shape.make();
+    Shape scalar2 = Shape.make();
+    assertEquals(scalar1, scalar2);
+    assertNotEquals(scalar1, shape1);
+
+    Shape unknown1 = Shape.make(-1, 4, 5);
+    Shape unknown2 = Shape.make(-1, 4, 5);
+    assertNotEquals(unknown1, unknown2);
+    assertNotEquals(unknown1, shape1);
+  }
 }

@@ -15,13 +15,15 @@ limitations under the License.
 
 package org.tensorflow;
 
+import org.tensorflow.types.DataType;
+
 /**
  * Base class for {@link Operation} implementations.
  *
  * <p>As opposed to {@link Operation} itself, this class is package private and therefore its usage
  * is limited to internal purposes only.
  */
-abstract class AbstractOperation implements Operation {
+public abstract class AbstractOperation implements Operation {
 
   @Override
   public Output<?>[] outputList(int idx, int length) {
@@ -34,13 +36,14 @@ abstract class AbstractOperation implements Operation {
 
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public <T> Output<T> output(int idx) {
+  public <T extends DataType<?>> Output<T> output(int idx) {
     return new Output(this, idx);
   }
 
   @Override
   public String toString() {
     return String.format("<%s '%s'>", type(), name());
+
   }
 
   /**
@@ -57,7 +60,7 @@ abstract class AbstractOperation implements Operation {
    * @param outputIdx index of the output in this operation
    * @return a native handle, see method description for more details
    */
-  abstract long getUnsafeNativeHandle(int outputIdx);
+  protected abstract long getUnsafeNativeHandle(int outputIdx);
 
   /**
    * Returns the shape of the tensor of the {@code outputIdx}th output of this operation.
@@ -65,7 +68,7 @@ abstract class AbstractOperation implements Operation {
    * @param outputIdx index of the output of this operation
    * @return output tensor shape
    */
-  abstract long[] shape(int outputIdx);
+  protected abstract long[] shape(int outputIdx);
 
   /**
    * Returns the datatype of the tensor of the {@code outputIdx}th output of this operation.
@@ -73,7 +76,7 @@ abstract class AbstractOperation implements Operation {
    * @param outputIdx index of the output of this operation
    * @return output tensor datatype
    */
-  abstract DataType dtype(int outputIdx);
+  protected abstract DataType<?> dtype(int outputIdx);
 
   /**
    * Returns the tensor of the {@code outputIdx}th output of this operation.
@@ -83,5 +86,5 @@ abstract class AbstractOperation implements Operation {
    * @param outputIdx index of the output of this operation
    * @return output tensor
    */
-  abstract Tensor<?> tensor(int outputIdx);
+  protected abstract Tensor<?> tensor(int outputIdx);
 }

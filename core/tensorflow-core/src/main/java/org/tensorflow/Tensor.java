@@ -26,6 +26,8 @@ import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
+import org.tensorflow.eager.EagerSession;
+import org.tensorflow.types.DataType;
 
 /**
  * A statically typed multi-dimensional array whose elements are of a type described by T.
@@ -42,7 +44,7 @@ import java.util.HashMap;
  * }
  * }</pre>
  */
-public final class Tensor<T> implements AutoCloseable {
+public final class Tensor<T extends DataType<?>> implements AutoCloseable {
 
   /**
    * Creates a Tensor from a Java object.

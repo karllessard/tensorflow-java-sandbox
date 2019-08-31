@@ -25,11 +25,13 @@ import org.tensorflow.nio.nd.Shape;
 
 public class DoubleDenseNdArrayTest extends DoubleNdArrayTestBase {
 
-  @Override protected DoubleNdArray allocate(Shape shape) {
+  @Override
+  protected DoubleNdArray allocate(Shape shape) {
     return NdArrays.ofDoubles(shape);
   }
 
-  @Override protected DataBuffer<Double> allocateBuffer(long capacity) {
+  @Override
+  protected DataBuffer<Double> allocateBuffer(long capacity) {
     return DataBuffers.ofDoubles(capacity);
   }
 }

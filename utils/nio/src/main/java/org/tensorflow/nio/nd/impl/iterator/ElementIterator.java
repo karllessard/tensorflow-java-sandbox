@@ -22,7 +22,7 @@ import org.tensorflow.nio.nd.IllegalRankException;
 import org.tensorflow.nio.nd.NdArray;
 
 class ElementIterator<T> implements Iterator<NdArray<T>> {
-  
+
   @Override
   public boolean hasNext() {
     return currentIdx < array.shape().numElements(0);
@@ -40,7 +40,7 @@ class ElementIterator<T> implements Iterator<NdArray<T>> {
     this.array = array;
     currentIdx = 0L;
   }
-  
+
   private final NdArray<T> array;
 
   private long currentIdx;

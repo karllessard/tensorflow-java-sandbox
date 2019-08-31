@@ -23,19 +23,17 @@ import org.tensorflow.nio.nd.impl.dimension.Dimensions;
  * An index used for slicing a view out of an N-dimensional array.
  *
  * <p>A slice, i.e. a reduced view, of an N-dimensional array is obtain by calling
- * {@link org.tensorflow.nio.nd.NdArray#slice(Index...)}, given a list of indices
- * that select which elements on a given dimension should be included/excluded
- * from that view.
+ * {@link org.tensorflow.nio.nd.NdArray#slice(Index...)}, given a list of indices that select which
+ * elements on a given dimension should be included/excluded from that view.
  */
 public interface Index {
 
   /**
-   * Returns the number of elements that can be retrieved using this index on the
-   * given dimension.
+   * Returns the number of elements that can be retrieved using this index on the given dimension.
    *
    * <p>An index that maps one-by-one all elements of the dimensions will return a value
-   * equal to {@code dim.numElements()}, while an index that only maps a subset of these
-   * will return a smaller value.
+   * equal to {@code dim.numElements()}, while an index that only maps a subset of these will return
+   * a smaller value.
    *
    * @param dim the indexed dimension
    * @return number of elements accessible
@@ -43,14 +41,14 @@ public interface Index {
   long numElements(Dimension dim);
 
   /**
-   * Transforms an element coordinate to a new coordinate by applying this index to the
-   * given dimension.
+   * Transforms an element coordinate to a new coordinate by applying this index to the given
+   * dimension.
    *
    * <p>For example, if the coordinate is 0 and this index flips the {@code n} elements on this
    * dimension, then the returned value will be {@code n-1}.
    *
    * @param coordinate coordinate to transform
-   * @param dim dimension the indexed dimension
+   * @param dim the indexed dimension
    * @return transformed coordinate
    */
   long mapCoordinate(long coordinate, Dimension dim);
@@ -60,6 +58,10 @@ public interface Index {
    *
    * <p>When accessing the elements from the returned dimension, this index will automatically
    * apply and may transform the original position.
+   *
+   * <p>For better performances, if the index references once all elements of the dimension,
+   * preserving their original sequence, then this method should return the {@code dim} argument
+   * directly.
    *
    * @param dim dimension to apply this index to
    * @return an indexed dimension

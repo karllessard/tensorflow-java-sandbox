@@ -20,7 +20,8 @@ import org.tensorflow.nio.buffer.FloatDataBuffer;
 import org.tensorflow.nio.nd.FloatNdArray;
 import org.tensorflow.nio.nd.Shape;
 
-public class FloatDenseNdArray extends AbstractDenseNdArray<Float, FloatNdArray> implements FloatNdArray {
+public class FloatDenseNdArray extends AbstractDenseNdArray<Float, FloatNdArray> implements
+    FloatNdArray {
 
   public static FloatNdArray wrap(FloatDataBuffer buffer, Shape shape) {
     Validator.denseShape(shape);

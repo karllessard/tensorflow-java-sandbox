@@ -20,7 +20,8 @@ import org.tensorflow.nio.buffer.LongDataBuffer;
 import org.tensorflow.nio.nd.LongNdArray;
 import org.tensorflow.nio.nd.Shape;
 
-public class LongDenseNdArray extends AbstractDenseNdArray<Long, LongNdArray> implements LongNdArray {
+public class LongDenseNdArray extends AbstractDenseNdArray<Long, LongNdArray> implements
+    LongNdArray {
 
   public static LongNdArray wrap(LongDataBuffer buffer, Shape shape) {
     Validator.denseShape(shape);

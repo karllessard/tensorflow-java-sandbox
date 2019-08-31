@@ -30,17 +30,18 @@ import org.tensorflow.nio.buffer.impl.Validator;
 public class ArrayDataBuffer<T> extends AbstractDataBuffer<T, DataBuffer<T>> {
 
   public static long MAX_CAPACITY = Integer.MAX_VALUE - 2;
-  
+
   public static <T> DataBuffer<T> allocate(Class<T> clazz, long capacity) {
     if (capacity < 0) {
       throw new IllegalArgumentException("Capacity must be non-negative");
     }
     if (capacity > MAX_CAPACITY) {
-      throw new IllegalArgumentException("Size for an array-based data buffer cannot exceeds " + MAX_CAPACITY +
-          " elements, use a LargeDataBuffer instead");
+      throw new IllegalArgumentException(
+          "Size for an array-based data buffer cannot exceeds " + MAX_CAPACITY +
+              " elements, use a LargeDataBuffer instead");
     }
     @SuppressWarnings("unchecked")
-    T[] array = (T[])Array.newInstance(clazz, (int)capacity);
+    T[] array = (T[]) Array.newInstance(clazz, (int) capacity);
     return new ArrayDataBuffer<T>(array, false);
   }
 
@@ -61,7 +62,7 @@ public class ArrayDataBuffer<T> extends AbstractDataBuffer<T, DataBuffer<T>> {
   @Override
   public DataBuffer<T> limit(long newLimit) {
     Validator.newLimit(this, newLimit);
-    limitIndex = (int)newLimit;
+    limitIndex = (int) newLimit;
     if (positionIndex > limitIndex) {
       positionIndex = limitIndex;
     }
@@ -86,7 +87,7 @@ public class ArrayDataBuffer<T> extends AbstractDataBuffer<T, DataBuffer<T>> {
   @Override
   public DataBuffer<T> position(long newPosition) {
     Validator.newPosition(this, newPosition);
-    positionIndex = (int)newPosition;
+    positionIndex = (int) newPosition;
     return this;
   }
 
@@ -112,7 +113,7 @@ public class ArrayDataBuffer<T> extends AbstractDataBuffer<T, DataBuffer<T>> {
   @Override
   public T get(long index) {
     Validator.getArgs(this, index);
-    return values[(int)index];
+    return values[(int) index];
   }
 
   @Override
@@ -135,7 +136,7 @@ public class ArrayDataBuffer<T> extends AbstractDataBuffer<T, DataBuffer<T>> {
   @Override
   public DataBuffer<T> put(long index, T value) {
     Validator.putArgs(this, index);
-    values[(int)index] = value;
+    values[(int) index] = value;
     return this;
   }
 
@@ -143,9 +144,10 @@ public class ArrayDataBuffer<T> extends AbstractDataBuffer<T, DataBuffer<T>> {
   public DataBuffer<T> put(DataBuffer<T> src) {
     Validator.putArgs(this, src);
     if (src instanceof ArrayDataBuffer) {
-      ArrayDataBuffer<T> srcArrayBuffer = (ArrayDataBuffer<T>)src;
-      int length = (int)src.remaining();
-      System.arraycopy(srcArrayBuffer.values, srcArrayBuffer.positionIndex, values, positionIndex, length);
+      ArrayDataBuffer<T> srcArrayBuffer = (ArrayDataBuffer<T>) src;
+      int length = (int) src.remaining();
+      System.arraycopy(srcArrayBuffer.values, srcArrayBuffer.positionIndex, values, positionIndex,
+          length);
       srcArrayBuffer.positionIndex += length;
       positionIndex += length;
       return this;
@@ -163,12 +165,12 @@ public class ArrayDataBuffer<T> extends AbstractDataBuffer<T, DataBuffer<T>> {
   }
 
   private ArrayDataBuffer(T[] values, boolean readOnly, int positionIndex, int limitIndex) {
-    this.values = values;  
+    this.values = values;
     this.readOnly = readOnly;
     this.positionIndex = positionIndex;
     this.limitIndex = limitIndex;
   }
- 
+
   private final T[] values;
   private final boolean readOnly;
   private int positionIndex;

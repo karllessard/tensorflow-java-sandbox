@@ -27,12 +27,12 @@ public final class Dimensions {
   public static Dimension axis(long numElements, long elementSize) {
     return new Axis(numElements, elementSize);
   }
-  
+
   public static Dimension coord(long index, Dimension originalDimension) {
-    return new Coordinate(index, (AbstractDimension)originalDimension);
+    return new Coordinate(index, (AbstractDimension) originalDimension);
   }
-  
+
   public static Dimension indexed(Dimension originalDimension, Index index) {
-    return new IndexedDimension((AbstractDimension)originalDimension, index);
+    return new IndexedDimension((AbstractDimension) originalDimension, index);
   }
 }

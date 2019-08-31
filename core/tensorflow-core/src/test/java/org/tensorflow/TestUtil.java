@@ -18,6 +18,10 @@ package org.tensorflow;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import org.tensorflow.graph.Graph;
+import org.tensorflow.graph.GraphOperation;
+import org.tensorflow.types.DataType;
+import org.tensorflow.types.Int32;
 
 /** Static utility functions. */
 public class TestUtil {
@@ -50,28 +54,28 @@ public class TestUtil {
     }
   }
 
-  public static <T> Output<T> constant(ExecutionEnvironment env, String name, Object value) {
+  public static <T extends DataType<?>> Output<T> constant(ExecutionEnvironment env, String name, Object value) {
     try (Tensor<?> t = Tensor.create(value)) {
       return env.opBuilder("Const", name)
           .setAttr("dtype", t.dataType())
           .setAttr("value", t)
           .build()
-          .<T>output(0);
+          .output(0);
     }
   }
 
-  public static <T> Output<T> placeholder(Graph g, String name, Class<T> type) {
+  public static <T extends DataType<?>> Output<T> placeholder(Graph g, String name, T type) {
     return g.opBuilder("Placeholder", name)
-        .setAttr("dtype", DataType.fromClass(type))
+        .setAttr("dtype", type)
         .build()
-        .<T>output(0);
+        .output(0);
   }
 
-  public static <T> Output<T> addN(ExecutionEnvironment env, Output<?>... inputs) {
+  public static <T extends DataType<?>> Output<T> addN(ExecutionEnvironment env, Output<?>... inputs) {
     return env.opBuilder("AddN", "AddN").addInputList(inputs).build().output(0);
   }
 
-  public static <T> Output<T> matmul(
+  public static <T extends DataType<?>> Output<T> matmul(
       Graph g, String name, Output<T> a, Output<T> b, boolean transposeA, boolean transposeB) {
     return g.opBuilder("MatMul", name)
         .addInput(a)
@@ -79,7 +83,7 @@ public class TestUtil {
         .setAttr("transpose_a", transposeA)
         .setAttr("transpose_b", transposeB)
         .build()
-        .<T>output(0);
+        .output(0);
   }
 
   public static Operation split(Graph g, String name, int[] values, int numSplit) {
@@ -90,16 +94,16 @@ public class TestUtil {
         .build();
   }
   
-  public static <T> Output<T> square(Graph g, String name, Output<T> value) {
+  public static <T extends DataType<?>> Output<T> square(Graph g, String name, Output<T> value) {
     return g.opBuilder("Square", name)
         .addInput(value)
         .build()
-        .<T>output(0);
+        .output(0);
   }
 
   public static void transpose_A_times_X(Graph g, int[][] a) {
-    Output<Integer> aa = constant(g, "A", a);
-    matmul(g, "Y", aa, placeholder(g, "X", Integer.class), true, false);
+    Output<Int32> aa = constant(g, "A", a);
+    matmul(g, "Y", aa, placeholder(g, "X", Int32.TYPE), true, false);
   }
 
   /**

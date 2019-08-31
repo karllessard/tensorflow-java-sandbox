@@ -25,15 +25,18 @@ import org.tensorflow.nio.nd.Shape;
 
 public class StringDenseNdArrayTest extends NdArrayTestBase<String> {
 
-  @Override protected NdArray<String> allocate(Shape shape) {
+  @Override
+  protected NdArray<String> allocate(Shape shape) {
     return NdArrays.of(String.class, shape);
   }
 
-  @Override protected DataBuffer<String> allocateBuffer(long capacity) {
+  @Override
+  protected DataBuffer<String> allocateBuffer(long capacity) {
     return DataBuffers.of(String.class, capacity);
   }
 
-  @Override protected String valueOf(Long val) {
+  @Override
+  protected String valueOf(Long val) {
     return val.toString();
   }
 

@@ -21,17 +21,17 @@ import org.tensorflow.nio.buffer.DataBuffers;
 import org.tensorflow.nio.nd.NdArray;
 import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.nio.nd.impl.iterator.Iterators;
-import org.tensorflow.nio.nd.impl.iterator.ValueIterable;
-import org.tensorflow.nio.nd.impl.iterator.ValueIterator;
+import org.tensorflow.nio.nd.ValueIterable;
+import org.tensorflow.nio.nd.ValueIterator;
 
 @SuppressWarnings("unchecked")
 public abstract class AbstractNdArray<T, U extends NdArray<T>> implements NdArray<T> {
-  
+
   @Override
   public Shape shape() {
     return shape;
   }
-  
+
   @Override
   public long size() {
     return shape().size();
@@ -44,45 +44,27 @@ public abstract class AbstractNdArray<T, U extends NdArray<T>> implements NdArra
 
   @Override
   public Iterable<U> childElements() {
-    return (Iterable)(() -> Iterators.elementsOf(this));
+    return (Iterable) (() -> Iterators.elementsOf(this));
   }
 
   @Override
-  public U copyTo(NdArray<T> array) {
-    if (!shape().equals(array.shape())) {
-      throw new IllegalArgumentException("Can only copy to arrays of the same shape");
-    }
-    for (ValueIterator<T> srcIter = values().iterator(), dstIter = array.values().iterator(); srcIter.hasNext();) {
-      dstIter.next(srcIter.next());
-    }
-    return (U)this;
+  public U read(T[] dst) {
+    return (U) read(DataBuffers.wrap(dst, false));
   }
 
   @Override
-  public U copyFrom(NdArray<T> array) {
-    if (!shape().equals(array.shape())) {
-      throw new IllegalArgumentException("Can only copy to arrays of the same shape");
-    }
-    for (ValueIterator<T> srcIter = array.values().iterator(), dstIter = values().iterator(); srcIter.hasNext();) {
-      dstIter.next(srcIter.next());
-    }
-    return (U)this;
+  public U read(T[] dst, int offset) {
+    return (U) read(DataBuffers.wrap(dst, false).position(offset));
   }
 
-  @Override public U read(T[] dst) {
-    return (U)read(DataBuffers.wrap(dst, false));
+  @Override
+  public U write(T[] src) {
+    return (U) write(DataBuffers.wrap(src, false));
   }
 
-  @Override public U read(T[] dst, int offset) {
-    return (U)read(DataBuffers.wrap(dst, false).position(offset));
-  }
-
-  @Override public U write(T[] src) {
-    return (U)write(DataBuffers.wrap(src, false));
-  }
-
-  @Override public U write(T[] src, int offset) {
-    return (U)write(DataBuffers.wrap(src, false).position(offset));
+  @Override
+  public U write(T[] src, int offset) {
+    return (U) write(DataBuffers.wrap(src, false).position(offset));
   }
 
   protected AbstractNdArray(Shape shape) {
@@ -94,8 +76,18 @@ public abstract class AbstractNdArray<T, U extends NdArray<T>> implements NdArra
   }
 
   protected void slowWrite(DataBuffer<T> buffer) {
-    for (ValueIterator<T> dstIter = values().iterator(); dstIter.hasNext();) {
+    for (ValueIterator<T> dstIter = values().iterator(); dstIter.hasNext(); ) {
       dstIter.next(buffer.get());
+    }
+  }
+
+  protected static <T> void slowCopy(NdArray<T> src, NdArray<T> dst) {
+    if (!src.shape().equals(dst.shape())) {
+      throw new IllegalArgumentException("Can only copy to arrays of the same shape");
+    }
+    for (ValueIterator<T> srcIter = src.values().iterator(), dstIter = dst.values().iterator();
+        srcIter.hasNext(); ) {
+      dstIter.next(srcIter.next());
     }
   }
 

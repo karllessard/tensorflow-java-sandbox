@@ -25,11 +25,13 @@ import org.tensorflow.nio.nd.Shape;
 
 public class LongDenseNdArrayTest extends LongNdArrayTestBase {
 
-  @Override protected LongNdArray allocate(Shape shape) {
+  @Override
+  protected LongNdArray allocate(Shape shape) {
     return NdArrays.ofLongs(shape);
   }
 
-  @Override protected DataBuffer<Long> allocateBuffer(long capacity) {
+  @Override
+  protected DataBuffer<Long> allocateBuffer(long capacity) {
     return DataBuffers.ofLongs(capacity);
   }
 }

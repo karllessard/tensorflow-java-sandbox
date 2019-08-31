@@ -21,15 +21,18 @@ import java.util.stream.LongStream;
 import org.tensorflow.nio.buffer.LongDataBuffer;
 import org.tensorflow.nio.buffer.impl.single.LongJdkDataBuffer;
 
-public final class LongLargeDataBuffer extends AbstractLargeDataBuffer<Long, LongDataBuffer> implements LongDataBuffer {
+public final class LongLargeDataBuffer extends
+    AbstractLargeDataBuffer<Long, LongDataBuffer> implements LongDataBuffer {
 
   public static long MAX_CAPACITY = LongJdkDataBuffer.MAX_CAPACITY << 1;
 
   public static LongDataBuffer allocate(long capacity) {
     if (capacity > MAX_CAPACITY) {
-      throw new IllegalArgumentException("Capacity for a joined data buffer cannot exceeds " + MAX_CAPACITY + " bytes");
+      throw new IllegalArgumentException(
+          "Capacity for a joined data buffer cannot exceeds " + MAX_CAPACITY + " bytes");
     }
-    LongDataBuffer[] buffers = allocateBuffers(LongDataBuffer.class, capacity, LongJdkDataBuffer.MAX_CAPACITY, LongJdkDataBuffer::allocate);
+    LongDataBuffer[] buffers = allocateBuffers(LongDataBuffer.class, capacity,
+        LongJdkDataBuffer.MAX_CAPACITY, LongJdkDataBuffer::allocate);
     return new LongLargeDataBuffer(buffers, false);
   }
 
@@ -50,19 +53,20 @@ public final class LongLargeDataBuffer extends AbstractLargeDataBuffer<Long, Lon
   @Override
   public LongDataBuffer get(long[] dst, int offset, int length) {
     Validator.getArrayArgs(this, dst.length, offset, length);
-    copyArray(offset, length, (b, o, l) -> ((LongDataBuffer)b).get(dst, o, l));
+    copyArray(offset, length, (b, o, l) -> ((LongDataBuffer) b).get(dst, o, l));
     return this;
   }
 
   @Override
   public LongDataBuffer put(long[] src, int offset, int length) {
     Validator.putArrayArgs(this, src.length, offset, length);
-    copyArray(offset, length, (b, o, l) -> ((LongDataBuffer)b).put(src, o, l));
+    copyArray(offset, length, (b, o, l) -> ((LongDataBuffer) b).put(src, o, l));
     return this;
   }
 
   @Override
-  protected LongLargeDataBuffer instantiate(LongDataBuffer[] buffers, boolean readOnly, long capacity, long limit, int currentBufferIndex) {
+  protected LongLargeDataBuffer instantiate(LongDataBuffer[] buffers, boolean readOnly,
+      long capacity, long limit, int currentBufferIndex) {
     return new LongLargeDataBuffer(buffers, readOnly, capacity, limit, currentBufferIndex);
   }
 
@@ -70,7 +74,8 @@ public final class LongLargeDataBuffer extends AbstractLargeDataBuffer<Long, Lon
     super(buffers, readOnly);
   }
 
-  private LongLargeDataBuffer(LongDataBuffer[] buffers, boolean readOnly, long capacity, long limit, int currentBufferIndex) {
+  private LongLargeDataBuffer(LongDataBuffer[] buffers, boolean readOnly, long capacity, long limit,
+      int currentBufferIndex) {
     super(buffers, readOnly, capacity, limit, currentBufferIndex);
   }
 }

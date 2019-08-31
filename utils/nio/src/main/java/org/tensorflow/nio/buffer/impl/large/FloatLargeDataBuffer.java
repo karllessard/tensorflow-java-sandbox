@@ -19,15 +19,19 @@ package org.tensorflow.nio.buffer.impl.large;
 import org.tensorflow.nio.buffer.FloatDataBuffer;
 import org.tensorflow.nio.buffer.impl.single.FloatJdkDataBuffer;
 
-public final class FloatLargeDataBuffer extends AbstractLargeDataBuffer<Float, FloatDataBuffer> implements FloatDataBuffer {
+public final class FloatLargeDataBuffer extends
+    AbstractLargeDataBuffer<Float, FloatDataBuffer> implements FloatDataBuffer {
 
-  public static long MAX_CAPACITY = FloatJdkDataBuffer.MAX_CAPACITY * FloatJdkDataBuffer.MAX_CAPACITY;
+  public static long MAX_CAPACITY =
+      FloatJdkDataBuffer.MAX_CAPACITY * FloatJdkDataBuffer.MAX_CAPACITY;
 
   public static FloatDataBuffer allocate(long capacity) {
     if (capacity > MAX_CAPACITY) {
-      throw new IllegalArgumentException("Capacity for a joined data buffer cannot exceeds " + MAX_CAPACITY + " bytes");
+      throw new IllegalArgumentException(
+          "Capacity for a joined data buffer cannot exceeds " + MAX_CAPACITY + " bytes");
     }
-    FloatDataBuffer[] buffers = allocateBuffers(FloatDataBuffer.class, capacity, FloatJdkDataBuffer.MAX_CAPACITY, FloatJdkDataBuffer::allocate);
+    FloatDataBuffer[] buffers = allocateBuffers(FloatDataBuffer.class, capacity,
+        FloatJdkDataBuffer.MAX_CAPACITY, FloatJdkDataBuffer::allocate);
     return new FloatLargeDataBuffer(buffers, false);
   }
 
@@ -39,19 +43,20 @@ public final class FloatLargeDataBuffer extends AbstractLargeDataBuffer<Float, F
   @Override
   public FloatDataBuffer get(float[] dst, int offset, int length) {
     Validator.getArrayArgs(this, dst.length, offset, length);
-    copyArray(offset, length, (b, o, l) -> ((FloatDataBuffer)b).get(dst, o, l));
+    copyArray(offset, length, (b, o, l) -> ((FloatDataBuffer) b).get(dst, o, l));
     return this;
   }
 
   @Override
   public FloatDataBuffer put(float[] src, int offset, int length) {
     Validator.putArrayArgs(this, src.length, offset, length);
-    copyArray(offset, length, (b, o, l) -> ((FloatDataBuffer)b).put(src, o, l));
+    copyArray(offset, length, (b, o, l) -> ((FloatDataBuffer) b).put(src, o, l));
     return this;
   }
 
   @Override
-  protected FloatLargeDataBuffer instantiate(FloatDataBuffer[] buffers, boolean readOnly, long capacity, long limit, int currentBufferIndex) {
+  protected FloatLargeDataBuffer instantiate(FloatDataBuffer[] buffers, boolean readOnly,
+      long capacity, long limit, int currentBufferIndex) {
     return new FloatLargeDataBuffer(buffers, readOnly, capacity, limit, currentBufferIndex);
   }
 
@@ -59,7 +64,8 @@ public final class FloatLargeDataBuffer extends AbstractLargeDataBuffer<Float, F
     super(buffers, readOnly);
   }
 
-  private FloatLargeDataBuffer(FloatDataBuffer[] buffers, boolean readOnly, long capacity, long limit, int currentBufferIndex) {
+  private FloatLargeDataBuffer(FloatDataBuffer[] buffers, boolean readOnly, long capacity,
+      long limit, int currentBufferIndex) {
     super(buffers, readOnly, capacity, limit, currentBufferIndex);
   }
 }

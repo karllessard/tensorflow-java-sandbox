@@ -21,15 +21,19 @@ import java.util.stream.DoubleStream;
 import org.tensorflow.nio.buffer.DoubleDataBuffer;
 import org.tensorflow.nio.buffer.impl.single.DoubleJdkDataBuffer;
 
-public final class DoubleLargeDataBuffer extends AbstractLargeDataBuffer<Double, DoubleDataBuffer> implements DoubleDataBuffer {
+public final class DoubleLargeDataBuffer extends
+    AbstractLargeDataBuffer<Double, DoubleDataBuffer> implements DoubleDataBuffer {
 
-  public static long MAX_CAPACITY = DoubleJdkDataBuffer.MAX_CAPACITY * DoubleJdkDataBuffer.MAX_CAPACITY;
+  public static long MAX_CAPACITY =
+      DoubleJdkDataBuffer.MAX_CAPACITY * DoubleJdkDataBuffer.MAX_CAPACITY;
 
   public static DoubleDataBuffer allocate(long capacity) {
     if (capacity > MAX_CAPACITY) {
-      throw new IllegalArgumentException("Capacity for a joined data buffer cannot exceeds " + MAX_CAPACITY + " bytes");
+      throw new IllegalArgumentException(
+          "Capacity for a joined data buffer cannot exceeds " + MAX_CAPACITY + " bytes");
     }
-    DoubleDataBuffer[] buffers = allocateBuffers(DoubleDataBuffer.class, capacity, DoubleJdkDataBuffer.MAX_CAPACITY, DoubleJdkDataBuffer::allocate);
+    DoubleDataBuffer[] buffers = allocateBuffers(DoubleDataBuffer.class, capacity,
+        DoubleJdkDataBuffer.MAX_CAPACITY, DoubleJdkDataBuffer::allocate);
     return new DoubleLargeDataBuffer(buffers, false);
   }
 
@@ -50,19 +54,20 @@ public final class DoubleLargeDataBuffer extends AbstractLargeDataBuffer<Double,
   @Override
   public DoubleDataBuffer get(double[] dst, int offset, int length) {
     Validator.getArrayArgs(this, dst.length, offset, length);
-    copyArray(offset, length, (b, o, l) -> ((DoubleDataBuffer)b).get(dst, o, l));
+    copyArray(offset, length, (b, o, l) -> ((DoubleDataBuffer) b).get(dst, o, l));
     return this;
   }
 
   @Override
   public DoubleDataBuffer put(double[] src, int offset, int length) {
     Validator.putArrayArgs(this, src.length, offset, length);
-    copyArray(offset, length, (b, o, l) -> ((DoubleDataBuffer)b).put(src, o, l));
+    copyArray(offset, length, (b, o, l) -> ((DoubleDataBuffer) b).put(src, o, l));
     return this;
   }
 
   @Override
-  protected DoubleLargeDataBuffer instantiate(DoubleDataBuffer[] buffers, boolean readOnly, long capacity, long limit, int currentBufferIndex) {
+  protected DoubleLargeDataBuffer instantiate(DoubleDataBuffer[] buffers, boolean readOnly,
+      long capacity, long limit, int currentBufferIndex) {
     return new DoubleLargeDataBuffer(buffers, readOnly, capacity, limit, currentBufferIndex);
   }
 
@@ -70,7 +75,8 @@ public final class DoubleLargeDataBuffer extends AbstractLargeDataBuffer<Double,
     super(buffers, readOnly);
   }
 
-  private DoubleLargeDataBuffer(DoubleDataBuffer[] buffers, boolean readOnly, long capacity, long limit, int currentBufferIndex) {
+  private DoubleLargeDataBuffer(DoubleDataBuffer[] buffers, boolean readOnly, long capacity,
+      long limit, int currentBufferIndex) {
     super(buffers, readOnly, capacity, limit, currentBufferIndex);
   }
 }

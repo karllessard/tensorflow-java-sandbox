@@ -17,17 +17,17 @@
 package org.tensorflow.nio.nd.impl.dimension;
 
 final class Axis extends AbstractDimension {
-  
+
   Axis(long numElements, long stride) {
     this.numElements = numElements;
     this.stride = stride;
   }
-  
+
   @Override
   public long numElements() {
     return numElements;
   }
-  
+
   @Override
   public long positionOf(long coord) {
     if (coord >= numElements) {
@@ -45,7 +45,7 @@ final class Axis extends AbstractDimension {
   long stride() {
     return stride;
   }
-  
+
   @Override
   public String toString() {
     return String.valueOf(numElements);

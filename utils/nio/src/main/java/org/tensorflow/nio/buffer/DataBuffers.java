@@ -36,7 +36,7 @@ import org.tensorflow.nio.buffer.impl.large.LargeDataBuffer;
 import org.tensorflow.nio.buffer.impl.large.LongLargeDataBuffer;
 
 /**
- * Helper class for creating `DataBuffer` instances.
+ * Helper class for creating {@link DataBuffer} instances.
  */
 public final class DataBuffers {
 

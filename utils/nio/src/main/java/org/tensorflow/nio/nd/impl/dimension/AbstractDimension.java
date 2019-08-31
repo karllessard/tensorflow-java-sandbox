@@ -17,20 +17,22 @@
 package org.tensorflow.nio.nd.impl.dimension;
 
 abstract class AbstractDimension implements Dimension {
-  
+
   abstract long stride();
 
   /**
    * Dimensions are known to be equal if they have the same number of elements
    */
-  @Override public int hashCode() {
-    return (int)numElements();
+  @Override
+  public int hashCode() {
+    return (int) numElements();
   }
 
   /**
    * Dimensions are known to be equal if they have the same number of elements
    */
-  @Override public boolean equals(Object obj) {
+  @Override
+  public boolean equals(Object obj) {
     if (this == obj) {
       return true;
     }

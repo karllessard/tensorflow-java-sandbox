@@ -33,7 +33,9 @@ import java.nio.LongBuffer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.tensorflow.eager.EagerSession;
 import org.tensorflow.types.UInt8;
+import static org.tensorflow.StaticApi.*;
 
 /** Unit tests for {@link org.tensorflow.Tensor}. */
 @RunWith(JUnit4.class)
@@ -43,6 +45,7 @@ public class TensorTest {
 
   @Test
   public void createWithByteBuffer() {
+    ndArrayOfBytes(shape(0));
     double[] doubles = {1d, 2d, 3d, 4d};
     long[] doubles_shape = {4};
     boolean[] bools = {true, false, true, false};

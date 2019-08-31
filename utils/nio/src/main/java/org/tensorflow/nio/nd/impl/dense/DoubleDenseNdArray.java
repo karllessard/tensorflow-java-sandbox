@@ -20,7 +20,8 @@ import org.tensorflow.nio.buffer.DoubleDataBuffer;
 import org.tensorflow.nio.nd.DoubleNdArray;
 import org.tensorflow.nio.nd.Shape;
 
-public class DoubleDenseNdArray extends AbstractDenseNdArray<Double, DoubleNdArray> implements DoubleNdArray {
+public class DoubleDenseNdArray extends AbstractDenseNdArray<Double, DoubleNdArray> implements
+    DoubleNdArray {
 
   public static DoubleNdArray wrap(DoubleDataBuffer buffer, Shape shape) {
     Validator.denseShape(shape);

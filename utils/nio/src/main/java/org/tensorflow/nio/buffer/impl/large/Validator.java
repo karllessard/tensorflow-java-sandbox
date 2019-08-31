@@ -69,7 +69,8 @@ class Validator extends org.tensorflow.nio.buffer.impl.Validator {
       throw new IndexOutOfBoundsException("Length must be non-negative");
     }
     if (length > arrayLength - offset) {
-      throw new IndexOutOfBoundsException("Length must be no larger than array length minus the offset");
+      throw new IndexOutOfBoundsException(
+          "Length must be no larger than array length minus the offset");
     }
   }
 }

@@ -28,41 +28,46 @@ import org.tensorflow.nio.buffer.DoubleDataBuffer;
 /**
  * A buffer of bytes using a JDK {@link DoubleBuffer} for storage.
  * <p>
- * Since JDK buffers supports only 32-bits indexation, the capacity of this buffer type cannot exceed
- * 2<sup>32</sup> - 1 (see {@link DoubleJdkDataBuffer.MAX_CAPACITY} for the real maximum value supported).
+ * Since JDK buffers supports only 32-bits indexation, the capacity of this buffer type cannot
+ * exceed 2<sup>32</sup> - 1 (see {@link DoubleJdkDataBuffer.MAX_CAPACITY} for the real maximum
+ * value supported).
  */
-public final class DoubleJdkDataBuffer extends AbstractJdkDataBuffer<Double, DoubleDataBuffer> implements DoubleDataBuffer {
+public final class DoubleJdkDataBuffer extends
+    AbstractJdkDataBuffer<Double, DoubleDataBuffer> implements DoubleDataBuffer {
 
   /**
    * The maximum capacity for a buffer of this type, i.e. the maximum number of bytes it can store.
    * <p>
-   * As the maximum capacity may vary depending on the JVM implementation and on the platform, this property returns
-   * a value that is safe for most of them.
+   * As the maximum capacity may vary depending on the JVM implementation and on the platform, this
+   * property returns a value that is safe for most of them.
    */
   public static long MAX_CAPACITY = AbstractJdkDataBuffer.MAX_CAPACITY;
 
   /**
    * Allocates a new byte buffer.
    * <p>
-   * The new buffer's position will be zero, its limit will be its capacity, and each of its elements will be initialized to zero.
+   * The new buffer's position will be zero, its limit will be its capacity, and each of its
+   * elements will be initialized to zero.
    *
    * @param capacity the new buffer's capacity, in bytes
    * @return the new byte buffer
-   * @throws IllegalArgumentException if the capacity is a negative integer or exceeds {@link MAX_CAPACITY}.
+   * @throws IllegalArgumentException if the capacity is a negative integer or exceeds {@link
+   * MAX_CAPACITY}.
    */
   public static DoubleDataBuffer allocate(long capacity) {
     if (capacity > MAX_CAPACITY) {
-      throw new IllegalArgumentException("Capacity of a JDK data buffer cannot exceeds " + MAX_CAPACITY +
-          " bytes, use DoubleLargeDataBuffer instead");
+      throw new IllegalArgumentException(
+          "Capacity of a JDK data buffer cannot exceeds " + MAX_CAPACITY +
+              " bytes, use DoubleLargeDataBuffer instead");
     }
-    return new DoubleJdkDataBuffer(DoubleBuffer.allocate((int)capacity));
+    return new DoubleJdkDataBuffer(DoubleBuffer.allocate((int) capacity));
   }
 
   /**
    * Wraps a JDK {@link DoubleBuffer} into a {@code DoubleDataBuffer}.
    *
-   * The new buffer's position, limit and capacity will be the one of the buf passed in parameter, and each of its elements will
-   * preserver their values.
+   * The new buffer's position, limit and capacity will be the one of the buf passed in parameter,
+   * and each of its elements will preserver their values.
    *
    * @param buffer buffer to wrap
    * @return the new byte buffer
@@ -78,7 +83,7 @@ public final class DoubleJdkDataBuffer extends AbstractJdkDataBuffer<Double, Dou
 
   @Override
   public Double get(long index) {
-    return buf.get((int)index);
+    return buf.get((int) index);
   }
 
   @Override
@@ -108,7 +113,7 @@ public final class DoubleJdkDataBuffer extends AbstractJdkDataBuffer<Double, Dou
 
   @Override
   public DoubleDataBuffer put(long index, Double value) {
-    buf.put((int)index, value);
+    buf.put((int) index, value);
     return this;
   }
 
@@ -121,7 +126,7 @@ public final class DoubleJdkDataBuffer extends AbstractJdkDataBuffer<Double, Dou
   @Override
   public DoubleDataBuffer put(DataBuffer<Double> src) {
     if (src instanceof DoubleJdkDataBuffer) {
-      buf.put(((DoubleJdkDataBuffer)src).buf);
+      buf.put(((DoubleJdkDataBuffer) src).buf);
       return this;
     }
     return super.put(src);
@@ -145,6 +150,6 @@ public final class DoubleJdkDataBuffer extends AbstractJdkDataBuffer<Double, Dou
   private DoubleJdkDataBuffer(DoubleBuffer buf) {
     this.buf = buf;
   }
-  
+
   private DoubleBuffer buf;
 }

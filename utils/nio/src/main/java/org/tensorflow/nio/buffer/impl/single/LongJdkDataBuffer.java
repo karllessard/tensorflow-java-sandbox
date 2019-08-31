@@ -28,42 +28,47 @@ import org.tensorflow.nio.buffer.LongDataBuffer;
 /**
  * A buffer of longs using a JDK {@link LongBuffer} for storage.
  * <p>
- * Since JDK buffers supports only 32-bits indexation, the capacity of this buffer type cannot exceed
- * 2<sup>32</sup> - 1 (see {@link IntJdkDataBuffer.MAX_CAPACITY} for the real maximum value supported).
+ * Since JDK buffers supports only 32-bits indexation, the capacity of this buffer type cannot
+ * exceed 2<sup>32</sup> - 1 (see {@link IntJdkDataBuffer.MAX_CAPACITY} for the real maximum value
+ * supported).
  */
-public final class LongJdkDataBuffer extends AbstractJdkDataBuffer<Long, LongDataBuffer> implements LongDataBuffer {
+public final class LongJdkDataBuffer extends AbstractJdkDataBuffer<Long, LongDataBuffer> implements
+    LongDataBuffer {
 
   /**
    * The maximum capacity for a buffer of this type, i.e. the maximum number of longs it can store.
    * <p>
-   * As the maximum capacity may vary depending on the JVM implementation and on the platform, this property returns
-   * a value that is safe for most of them.
+   * As the maximum capacity may vary depending on the JVM implementation and on the platform, this
+   * property returns a value that is safe for most of them.
    */
   public static long MAX_CAPACITY = AbstractJdkDataBuffer.MAX_CAPACITY;
 
   /**
    * Allocates a new long buffer.
    * <p>
-   * The new buffer's position will be zero, its limit will be its capacity, and each of its elements will be initialized to zero. 
-   * 
+   * The new buffer's position will be zero, its limit will be its capacity, and each of its
+   * elements will be initialized to zero.
+   *
    * @param capacity the new buffer's capacity, in longs
-   * @return the new long buffer 
-   * @throws IllegalArgumentException if the capacity is a negative integer or exceeds {@link MAX_CAPACITY}.
+   * @return the new long buffer
+   * @throws IllegalArgumentException if the capacity is a negative integer or exceeds {@link
+   * MAX_CAPACITY}.
    */
   public static LongDataBuffer allocate(long capacity) {
     if (capacity > MAX_CAPACITY) {
-      throw new IllegalArgumentException("Capacity of a JDK data buffer cannot exceeds " + MAX_CAPACITY + 
-          " longs, use LongLargeDataBuffer instead");
+      throw new IllegalArgumentException(
+          "Capacity of a JDK data buffer cannot exceeds " + MAX_CAPACITY +
+              " longs, use LongLargeDataBuffer instead");
     }
-    return new LongJdkDataBuffer(LongBuffer.allocate((int)capacity));
+    return new LongJdkDataBuffer(LongBuffer.allocate((int) capacity));
   }
 
   /**
    * Wraps a JDK {@link LongBuffer} into a {@code LongDataBuffer}.
-   * 
-   * The new buffer's position, limit and capacity will be the one of the buf passed in parameter, and each of its elements will 
-   * preserver their values.
-   * 
+   *
+   * The new buffer's position, limit and capacity will be the one of the buf passed in parameter,
+   * and each of its elements will preserver their values.
+   *
    * @param buffer buffer to wrap
    * @return the new long buffer
    */
@@ -78,7 +83,7 @@ public final class LongJdkDataBuffer extends AbstractJdkDataBuffer<Long, LongDat
 
   @Override
   public Long get(long index) {
-    return buf.get((int)index);
+    return buf.get((int) index);
   }
 
   @Override
@@ -95,7 +100,7 @@ public final class LongJdkDataBuffer extends AbstractJdkDataBuffer<Long, LongDat
 
   @Override
   public LongDataBuffer put(long index, Long value) {
-    buf.put((int)index, value);
+    buf.put((int) index, value);
     return this;
   }
 
@@ -108,7 +113,7 @@ public final class LongJdkDataBuffer extends AbstractJdkDataBuffer<Long, LongDat
   @Override
   public LongDataBuffer put(DataBuffer<Long> src) {
     if (src instanceof LongJdkDataBuffer) {
-      buf.put(((LongJdkDataBuffer)src).buf);
+      buf.put(((LongJdkDataBuffer) src).buf);
       return this;
     }
     return super.put(src);
@@ -145,6 +150,6 @@ public final class LongJdkDataBuffer extends AbstractJdkDataBuffer<Long, LongDat
   private LongJdkDataBuffer(LongBuffer buf) {
     this.buf = buf;
   }
-  
+
   private LongBuffer buf;
 }

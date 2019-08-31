@@ -17,17 +17,17 @@
 package org.tensorflow.nio.nd.impl.dimension;
 
 final class Coordinate extends AbstractDimension {
-  
+
   Coordinate(long index, AbstractDimension targetDimension) {
     this.index = index;
     this.stride = targetDimension.stride();
   }
-  
+
   @Override
   public long numElements() {
     return 0;
   }
-  
+
   @Override
   public long positionOf(long coord) {
     throw new IndexOutOfBoundsException();
@@ -52,7 +52,7 @@ final class Coordinate extends AbstractDimension {
   public String toString() {
     return "(" + index + ")";
   }
-  
+
   private final long index;
   private final long stride;
 }

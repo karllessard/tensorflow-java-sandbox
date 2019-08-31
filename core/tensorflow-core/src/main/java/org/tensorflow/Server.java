@@ -15,10 +15,12 @@ limitations under the License.
 
 package org.tensorflow;
 
+import org.tensorflow.graph.Session;
+
 /**
  * An in-process TensorFlow server, for use in distributed training.
  *
- * <p>A {@code Server} instance encapsulates a set of devices and a {@link org.tensorflow.Session}
+ * <p>A {@code Server} instance encapsulates a set of devices and a {@link Session}
  * target that can participate in distributed training. A server belongs to a cluster (specified by
  * a {@code ClusterSpec}), and corresponds to a particular task in a named job. The server can
  * communicate with any other server in the same cluster. The server will not serve any requests

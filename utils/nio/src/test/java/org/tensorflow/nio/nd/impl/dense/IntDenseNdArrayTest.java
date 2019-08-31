@@ -25,11 +25,13 @@ import org.tensorflow.nio.nd.Shape;
 
 public class IntDenseNdArrayTest extends IntNdArrayTestBase {
 
-  @Override protected IntNdArray allocate(Shape shape) {
+  @Override
+  protected IntNdArray allocate(Shape shape) {
     return NdArrays.ofIntegers(shape);
   }
 
-  @Override protected DataBuffer<Integer> allocateBuffer(long capacity) {
+  @Override
+  protected DataBuffer<Integer> allocateBuffer(long capacity) {
     return DataBuffers.ofIntegers(capacity);
   }
 }

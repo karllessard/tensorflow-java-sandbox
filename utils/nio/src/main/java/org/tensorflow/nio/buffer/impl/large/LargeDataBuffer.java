@@ -25,10 +25,12 @@ public final class LargeDataBuffer<T> extends AbstractLargeDataBuffer<T, DataBuf
 
   public static <T> LargeDataBuffer<T> allocate(Class<T> clazz, long capacity) {
     if (capacity > MAX_CAPACITY) {
-      throw new IllegalArgumentException("Capacity for a joined data buffer cannot exceeds " + MAX_CAPACITY + " elements");
+      throw new IllegalArgumentException(
+          "Capacity for a joined data buffer cannot exceeds " + MAX_CAPACITY + " elements");
     }
     @SuppressWarnings("unchecked")
-    DataBuffer<T>[] buffers = allocateBuffers(DataBuffer.class, capacity, ArrayDataBuffer.MAX_CAPACITY, (c) -> ArrayDataBuffer.allocate(clazz, c));
+    DataBuffer<T>[] buffers = allocateBuffers(DataBuffer.class, capacity,
+        ArrayDataBuffer.MAX_CAPACITY, (c) -> ArrayDataBuffer.allocate(clazz, c));
     return new LargeDataBuffer<>(buffers, false);
   }
 
@@ -38,7 +40,8 @@ public final class LargeDataBuffer<T> extends AbstractLargeDataBuffer<T, DataBuf
   }
 
   @Override
-  protected LargeDataBuffer<T> instantiate(DataBuffer<T>[] buffers, boolean readOnly, long capacity, long limit, int currentBufferIndex) {
+  protected LargeDataBuffer<T> instantiate(DataBuffer<T>[] buffers, boolean readOnly, long capacity,
+      long limit, int currentBufferIndex) {
     return new LargeDataBuffer<>(buffers, readOnly, capacity, limit, currentBufferIndex);
   }
 
@@ -46,7 +49,8 @@ public final class LargeDataBuffer<T> extends AbstractLargeDataBuffer<T, DataBuf
     super(buffers, readOnly);
   }
 
-  private LargeDataBuffer(DataBuffer<T>[] buffers, boolean readOnly, long capacity, long limit, int currentBufferIndex) {
+  private LargeDataBuffer(DataBuffer<T>[] buffers, boolean readOnly, long capacity, long limit,
+      int currentBufferIndex) {
     super(buffers, readOnly, capacity, limit, currentBufferIndex);
   }
 }

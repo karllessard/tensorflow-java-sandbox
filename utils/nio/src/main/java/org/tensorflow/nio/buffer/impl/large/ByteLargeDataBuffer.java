@@ -19,15 +19,18 @@ package org.tensorflow.nio.buffer.impl.large;
 import org.tensorflow.nio.buffer.ByteDataBuffer;
 import org.tensorflow.nio.buffer.impl.single.ByteJdkDataBuffer;
 
-public final class ByteLargeDataBuffer extends AbstractLargeDataBuffer<Byte, ByteDataBuffer> implements ByteDataBuffer {
-  
+public final class ByteLargeDataBuffer extends
+    AbstractLargeDataBuffer<Byte, ByteDataBuffer> implements ByteDataBuffer {
+
   public static long MAX_CAPACITY = ByteJdkDataBuffer.MAX_CAPACITY * ByteJdkDataBuffer.MAX_CAPACITY;
 
   public static ByteDataBuffer allocate(long capacity) {
     if (capacity > MAX_CAPACITY) {
-      throw new IllegalArgumentException("Capacity for a joined data buffer cannot exceeds " + MAX_CAPACITY + " bytes");
+      throw new IllegalArgumentException(
+          "Capacity for a joined data buffer cannot exceeds " + MAX_CAPACITY + " bytes");
     }
-    ByteDataBuffer[] buffers = allocateBuffers(ByteDataBuffer.class, capacity, ByteJdkDataBuffer.MAX_CAPACITY, ByteJdkDataBuffer::allocate);
+    ByteDataBuffer[] buffers = allocateBuffers(ByteDataBuffer.class, capacity,
+        ByteJdkDataBuffer.MAX_CAPACITY, ByteJdkDataBuffer::allocate);
     return new ByteLargeDataBuffer(buffers, false);
   }
 
@@ -35,23 +38,24 @@ public final class ByteLargeDataBuffer extends AbstractLargeDataBuffer<Byte, Byt
     boolean readOnly = Validator.joinBuffers(buffers);
     return new ByteLargeDataBuffer(buffers, readOnly);
   }
- 
+
   @Override
   public ByteDataBuffer get(byte[] dst, int offset, int length) {
     Validator.getArrayArgs(this, dst.length, offset, length);
-    copyArray(offset, length, (b, o, l) -> ((ByteDataBuffer)b).get(dst, o, l));
+    copyArray(offset, length, (b, o, l) -> ((ByteDataBuffer) b).get(dst, o, l));
     return this;
   }
 
   @Override
   public ByteDataBuffer put(byte[] src, int offset, int length) {
     Validator.putArrayArgs(this, src.length, offset, length);
-    copyArray(offset, length, (b, o, l) -> ((ByteDataBuffer)b).put(src, o, l));
+    copyArray(offset, length, (b, o, l) -> ((ByteDataBuffer) b).put(src, o, l));
     return this;
   }
 
   @Override
-  protected ByteLargeDataBuffer instantiate(ByteDataBuffer[] buffers, boolean readOnly, long capacity, long limit, int currentBufferIndex) {
+  protected ByteLargeDataBuffer instantiate(ByteDataBuffer[] buffers, boolean readOnly,
+      long capacity, long limit, int currentBufferIndex) {
     return new ByteLargeDataBuffer(buffers, readOnly, capacity, limit, currentBufferIndex);
   }
 
@@ -59,7 +63,8 @@ public final class ByteLargeDataBuffer extends AbstractLargeDataBuffer<Byte, Byt
     super(buffers, readOnly);
   }
 
-  private ByteLargeDataBuffer(ByteDataBuffer[] buffers, boolean readOnly, long capacity, long limit, int currentBufferIndex) {
+  private ByteLargeDataBuffer(ByteDataBuffer[] buffers, boolean readOnly, long capacity, long limit,
+      int currentBufferIndex) {
     super(buffers, readOnly, capacity, limit, currentBufferIndex);
   }
 }

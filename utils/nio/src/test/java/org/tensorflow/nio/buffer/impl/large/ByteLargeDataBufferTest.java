@@ -20,7 +20,7 @@ import org.tensorflow.nio.buffer.ByteDataBuffer;
 import org.tensorflow.nio.buffer.ByteDataBufferTestBase;
 
 public class ByteLargeDataBufferTest extends ByteDataBufferTestBase {
-  
+
   @Override
   protected long maxCapacity() {
     return ByteLargeDataBuffer.MAX_CAPACITY;

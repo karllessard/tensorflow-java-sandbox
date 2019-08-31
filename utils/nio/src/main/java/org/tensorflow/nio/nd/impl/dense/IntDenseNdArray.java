@@ -20,7 +20,8 @@ import org.tensorflow.nio.buffer.IntDataBuffer;
 import org.tensorflow.nio.nd.IntNdArray;
 import org.tensorflow.nio.nd.Shape;
 
-public class IntDenseNdArray extends AbstractDenseNdArray<Integer, IntNdArray> implements IntNdArray {
+public class IntDenseNdArray extends AbstractDenseNdArray<Integer, IntNdArray> implements
+    IntNdArray {
 
   public static IntNdArray wrap(IntDataBuffer buffer, Shape shape) {
     Validator.denseShape(shape);

@@ -17,7 +17,7 @@ package org.tensorflow;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/** Type-safe factory methods for creating {@link org.tensorflow.Tensor} objects. */
+/** DataType-safe factory methods for creating {@link org.tensorflow.Tensor} objects. */
 public final class Tensors {
   private Tensors() {}
 

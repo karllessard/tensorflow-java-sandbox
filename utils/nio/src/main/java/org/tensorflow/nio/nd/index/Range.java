@@ -21,8 +21,8 @@ import org.tensorflow.nio.nd.impl.dimension.Dimension;
 /**
  * An index that returns only elements on a given dimension between two coordinates.
  *
- * <p>For example, given a vector with {@code n} elements on the {@code x} axis, and {@code n > k > j},
- * {@code range(j, k)} returns x<sub>j</sub>, x<sub>j+1</sub>, ..., x<sub>k</sub>
+ * <p>For example, given a vector with {@code n} elements on the {@code x} axis, and {@code n > k >
+ * j}, {@code range(j, k)} returns x<sub>j</sub>, x<sub>j+1</sub>, ..., x<sub>k</sub>
  */
 class Range implements Index {
 
@@ -34,6 +34,14 @@ class Range implements Index {
   @Override
   public long mapCoordinate(long coordinate, Dimension dim) {
     return start + coordinate;
+  }
+
+  @Override
+  public Dimension apply(Dimension dim) {
+    if (end > dim.numElements()) {
+      throw new IndexOutOfBoundsException("End coordinate exceeds the number of elements");
+    }
+    return start == 0 && end == dim.numElements() ? dim : Index.super.apply(dim);
   }
 
   Range(long start, long end) {

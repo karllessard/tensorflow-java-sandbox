@@ -11,7 +11,7 @@
   <artifactId>tensorflow-core-native</artifactId>
   <packaging>jar</packaging>
 
-  <name>Core JNI Library</name>
+  <name>Core Native Library</name>
   <description>Platform-dependent native code for the TensorFlow Java library.</description>
 
   <profiles>

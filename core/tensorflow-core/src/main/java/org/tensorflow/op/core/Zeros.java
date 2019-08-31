@@ -15,13 +15,14 @@ limitations under the License.
 package org.tensorflow.op.core;
 
 import java.nio.ByteBuffer;
-
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.DataType;
+import org.tensorflow.types.NumberType;
 
 /**
  * An operator creating a constant initialized with zeros of the shape given by `dims`.
@@ -34,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> constant type
  */
 @Operator
-public class Zeros<T> implements Op, Operand<T> {
+public class Zeros<T extends DataType<?>> implements Op, Operand<T> {
 
   /**
    * Creates a zeroed tensor given its type and shape.
@@ -45,11 +46,11 @@ public class Zeros<T> implements Op, Operand<T> {
    * @return a constant tensor initialized with zeros
    * @throws IllegalArgumentException if the tensor type or shape cannot be initialized with zeros.
    */
-  public static <T, U extends Number> Zeros<T> create(Scope scope, Operand<U> dims, Class<T> type) {
+  public static <T extends DataType<?>, U extends NumberType<?>> Zeros<T> create(Scope scope, Operand<U> dims, T type) {
     Scope childScope = scope.withSubScope("Zeros"); // If scope had an op name set, it will prevail on "Zeros"
-    int zeroSize = DataType.fromClass(type).byteSize();
+    int zeroSize = type.byteSize();
     if (zeroSize < 0) {
-      throw new IllegalArgumentException(type.getSimpleName() + " tensors cannot be initialized with zeros");
+      throw new IllegalArgumentException(type.getClass().getSimpleName() + " tensors cannot be initialized with zeros");
     }
     Constant<T> zero = Constant.create(childScope.withName("Zero"), type, new long[]{}, ByteBuffer.allocate(zeroSize));
     return new Zeros<T>(Fill.create(childScope, dims, zero));

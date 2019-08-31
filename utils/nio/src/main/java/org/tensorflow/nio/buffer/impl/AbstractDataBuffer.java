@@ -32,6 +32,6 @@ public abstract class AbstractDataBuffer<T, B extends DataBuffer<T>> implements 
     while (src.hasRemaining()) {
       put(src.get());
     }
-    return (B)this;
+    return (B) this;
   }
 }

@@ -25,11 +25,13 @@ import org.tensorflow.nio.nd.Shape;
 
 public class ByteDenseNdArrayTest extends ByteNdArrayTestBase {
 
-  @Override protected ByteNdArray allocate(Shape shape) {
+  @Override
+  protected ByteNdArray allocate(Shape shape) {
     return NdArrays.ofBytes(shape);
   }
 
-  @Override protected DataBuffer<Byte> allocateBuffer(long capacity) {
+  @Override
+  protected DataBuffer<Byte> allocateBuffer(long capacity) {
     return DataBuffers.ofBytes(capacity);
   }
 }

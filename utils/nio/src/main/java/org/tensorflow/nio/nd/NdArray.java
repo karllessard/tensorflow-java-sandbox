@@ -18,16 +18,14 @@ package org.tensorflow.nio.nd;
 
 import org.tensorflow.nio.buffer.DataBuffer;
 import org.tensorflow.nio.nd.index.Index;
-import org.tensorflow.nio.nd.impl.iterator.ValueIterable;
-import org.tensorflow.nio.nd.impl.iterator.ValueIterator;
 
 /**
  * A data structure of N-dimensions.
  *
  * <p>The `NdArray` interface creates an abstraction between the physical storage of a data record,
- * which can be linear or segmented, and its logical representation. In general, they achieve
- * better performances than standard multi-dimensional arrays in Java by mapping directly the
- * data in memory.
+ * which can be linear or segmented, and its logical representation. In general, they achieve better
+ * performances than standard multi-dimensional arrays in Java by mapping directly the data in
+ * memory.
  *
  * <p>Like {@link DataBuffer}, {@code NdArray} instances support 64-bits indexation so they can be
  * used to map very large data records. They also support special indices that to traverse their
@@ -54,14 +52,10 @@ import org.tensorflow.nio.nd.impl.iterator.ValueIterator;
  */
 public interface NdArray<T> {
 
-  /**
-   * @return the shape of this N-dimensional array
-   */
+  /** Returns the shape of this N-dimensional array */
   Shape shape();
 
-  /**
-   * @return the rank of this N-dimensional array
-   */
+  /** Returns the rank of this N-dimensional array */
   default int rank() {
     return shape().numDimensions();
   }
@@ -70,6 +64,7 @@ public interface NdArray<T> {
    * Computes and returns the total size of this N-dimensional array, in number of values.
    *
    * <p>For example, given a 3x3x2 matrix, the return value will be 18.
+   *
    * @return total size of this nd array
    */
   long size();
@@ -77,12 +72,12 @@ public interface NdArray<T> {
   /**
    * Returns an iteration of the elements on the first dimension of this N-dimensional array.
    *
-   * <p>For example, given a {@code n x m} matrix on the {@code [x, y]} axes, the return object can be used
-   * to iterate all {@code y} vectors in the following order:
+   * <p>For example, given a {@code n x m} matrix on the {@code [x, y]} axes, the return object can
+   * be used to iterate all {@code y} vectors in the following order:
    * <pre>
    * x<sub>0</sub>, x<sub>1</sub>, ..., x<sub>n-1</sub>
    * </pre>
-  *
+   *
    * @return an iteration of N-dimensional arrays
    * @throws IllegalRankException if this array is a scalar (rank 0)
    */
@@ -92,10 +87,11 @@ public interface NdArray<T> {
    * Returns an iteration of all values found under this N-dimension array.
    *
    * <p>Logically, the N-dimensional array is flatten in a vector of scalars, where scalars of the
-   * {@code n - 1} dimension precedes those of the {@code n} dimension, for a total of
-   * {@link #size()} values.
+   * {@code n - 1} dimension precedes those of the {@code n} dimension, for a total of {@link
+   * #size()} values.
    *
-   * <p>For example, given a {@code n x m} matrix on the {@code [x, y]} axes, values are iterated in the
+   * <p>For example, given a {@code n x m} matrix on the {@code [x, y]} axes, values are iterated in
+   * the
    * following order:
    * <pre>
    * x<sub>0</sub>y<sub>0</sub>, x<sub>0</sub>y<sub>1</sub>, ..., x<sub>0</sub>y<sub>m-1</sub>, x<sub>1</sub>y<sub>0</sub>, x<sub>1</sub>y<sub>1</sub>, ..., x<sub>n-1</sub>y<sub>m-1</sub>
@@ -126,26 +122,29 @@ public interface NdArray<T> {
   /**
    * Returns the N-dimensional element of this array at the given coordinates.
    *
-   * <p>Elements of any of the dimensions of this array can be retrieved. For example, if the number
+   * <p>Elements of any of the dimensions of this array can be retrieved. For example, if the
+   * number
    * of indices is equal to the number of dimensions of this array, then a rank-0 (scalar) array is
    * returned, which value can then be obtained with `array.get()`.
    *
-   * <p>Any changes applied to the returned elements affect the data of this array as well, as there
+   * <p>Any changes applied to the returned elements affect the data of this array as well, as
+   * there
    * is no copy involved.
    *
    * <p>Note that invoking this method is equivalent and more efficient to slice this array at
-   * on single element for each indexed dimension, i.e.
-   * {@code array.at(x, y, z) == array.slice(at(x), at(y), at(z))}
+   * on single element for each indexed dimension, i.e. {@code array.at(x, y, z) ==
+   * array.slice(at(x), at(y), at(z))}
    *
-   * @param indices coordinates of the element to access, none will return this array
+   * @param coordinates coordinates of the element to access, none will return this array
    * @return the element at this index
-   * @throws IndexOutOfBoundsException if some indices are outside the limits of their respective dimension
+   * @throws IndexOutOfBoundsException if some indices are outside the limits of their respective
+   * dimension
    */
-  NdArray<T> at(long... indices);
+  NdArray<T> at(long... coordinates);
 
   /**
-   * Creates a multi-dimensional view (or slice) of this array by mapping one or more dimensions
-   * to the given index selectors.
+   * Creates a multi-dimensional view (or slice) of this array by mapping one or more dimensions to
+   * the given index selectors.
    *
    * <p>Slices allow to traverse an N-dimensional array in any of its axis and/or to filter only
    * elements of interest. For example, for a given matrix on the {@code [x, y]} axes, it is
@@ -178,7 +177,8 @@ public interface NdArray<T> {
    *
    * @param indices index selectors per dimensions, starting from dimension 0 of this array.
    * @return the element resulting of the index selection
-   * @throws IndexOutOfBoundsException if some indices are outside the limits of their respective dimension
+   * @throws IndexOutOfBoundsException if some indices are outside the limits of their respective
+   * dimension
    */
   NdArray<T> slice(Index... indices);
 
@@ -196,12 +196,13 @@ public interface NdArray<T> {
    *  scalar.get();  // succeeds, returns 0.0f
    * }</pre>
    *
-   * @param indices coordinates of the scalar to resolve
+   * @param coordinates coordinates of the scalar to resolve
    * @return value of that scalar
-   * @throws IndexOutOfBoundsException if some indices are outside the limits of their respective dimension
+   * @throws IndexOutOfBoundsException if some indices are outside the limits of their respective
+   * dimension
    * @throws IllegalRankException if number of indices is not sufficient to access a scalar element
    */
-  T get(long... indices);
+  T get(long... coordinates);
 
   /**
    * Assigns the value of the scalar found at the given coordinates.
@@ -217,45 +218,51 @@ public interface NdArray<T> {
    *  scalar.set(10.0f);  // succeeds
    * }</pre>
    *
-   * @param indices coordinates of the scalar to assign
+   * @param coordinates coordinates of the scalar to assign
    * @return this array
-   * @throws IndexOutOfBoundsException if some indices are outside the limits of their respective dimension
+   * @throws IndexOutOfBoundsException if some indices are outside the limits of their respective
+   * dimension
    * @throws IllegalRankException if number of indices is not sufficient to access a scalar element
    */
-  NdArray<T> set(T value, long... indices);
+  NdArray<T> set(T value, long... coordinates);
 
   /**
    * Copy the content of this array to the destination array.
    *
-   * <p>The {@link #shape()} of the destination array must be equal to the shape of this array, or an exception is
-   * thrown. After the copy, the content of both arrays can be altered independently, without affecting
-   * each other.
+   * <p>The {@link #shape()} of the destination array must be equal to the shape of this array, or
+   * an exception is
+   * thrown. After the copy, the content of both arrays can be altered independently, without
+   * affecting each other.
    *
    * @param dst array to receive a copy of the content of this array
    * @return this array
-   * @throws IllegalArgumentException if the shape of {@code dst} is not equal to the shape of this array
+   * @throws IllegalArgumentException if the shape of {@code dst} is not equal to the shape of this
+   * array
    */
   NdArray<T> copyTo(NdArray<T> dst);
 
   /**
    * Copy the content of the source array to this array.
    *
-   * <p>The {@link #shape()} of the source array must be equal to the shape of this array, or an exception is
-   * thrown. After the copy, the content of both arrays can be altered independently, without affecting
-   * each other.
+   * <p>The {@link #shape()} of the source array must be equal to the shape of this array, or an
+   * exception is
+   * thrown. After the copy, the content of both arrays can be altered independently, without
+   * affecting each other.
    *
    * @param src array from which content is copied to this array
    * @return this array
-   * @throws IllegalArgumentException if the shape of {@code src} is not equal to the shape of this array
+   * @throws IllegalArgumentException if the shape of {@code src} is not equal to the shape of this
+   * array
    */
   NdArray<T> copyFrom(NdArray<T> src);
 
   /**
    * Read the content of this N-dimensional array into the destination buffer.
    *
-   * <p>The remaining space of the buffer must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the buffer and of the array can be altered
-   * independently, without affecting each other.
+   * <p>The remaining space of the buffer must be equal or greater to the {@link #size()} of this
+   * array,
+   * or an exception is thrown. After the copy, content of the buffer and of the array can be
+   * altered independently, without affecting each other.
    *
    * @param dst the destination buffer
    * @return this array
@@ -267,13 +274,15 @@ public interface NdArray<T> {
   /**
    * Write the content of this N-dimensional array from the source buffer.
    *
-   * <p>The remaining data of the buffer must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the buffer and of the array can be altered
-   * independently, without affecting each other.
+   * <p>The remaining data of the buffer must be equal or greater to the {@link #size()} of this
+   * array,
+   * or an exception is thrown. After the copy, content of the buffer and of the array can be
+   * altered independently, without affecting each other.
    *
    * @param src the source buffer
    * @return this array
-   * @throws java.nio.BufferUnderflowException if the buffer has not enough remaining data to write into this array
+   * @throws java.nio.BufferUnderflowException if the buffer has not enough remaining data to write
+   * into this array
    * @see DataBuffer#remaining()
    */
   NdArray<T> write(DataBuffer<T> src);
@@ -281,13 +290,15 @@ public interface NdArray<T> {
   /**
    * Reads the content of this N-dimensional array into the destination array.
    *
-   * <p>The size of the destination array must be equal or greater to the {@link #size()} of this array,
+   * <p>The size of the destination array must be equal or greater to the {@link #size()} of this
+   * array,
    * or an exception is thrown. After the copy, content of the both arrays can be altered
    * independently, without affecting each other.
    *
    * @param dst the destination array
    * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
+   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of
+   * this array
    */
   NdArray<T> read(T[] dst);
 
@@ -301,7 +312,8 @@ public interface NdArray<T> {
    * @param dst the destination array
    * @param offset the index of the first element to write in the destination array
    * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
+   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of
+   * this array
    * @throws IllegalArgumentException if offset is greater than dst length or is negative
    */
   NdArray<T> read(T[] dst, int offset);
@@ -315,7 +327,8 @@ public interface NdArray<T> {
    *
    * @param src the source array
    * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
+   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size
+   * of this array
    */
   NdArray<T> write(T[] src);
 
@@ -329,7 +342,8 @@ public interface NdArray<T> {
    * @param src the source array
    * @param offset the index of the first byte to read from the source array
    * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
+   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size
+   * of this array
    * @throws IllegalArgumentException if offset is greater than src length or is negative
    */
   NdArray<T> write(T[] src, int offset);

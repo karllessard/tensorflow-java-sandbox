@@ -23,7 +23,7 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.tensorflow.Graph;
+import org.tensorflow.graph.Graph;
 import org.tensorflow.Operation;
 import org.tensorflow.Output;
 import org.tensorflow.TestUtil;

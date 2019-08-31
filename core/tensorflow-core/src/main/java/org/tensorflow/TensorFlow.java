@@ -62,7 +62,7 @@ public final class TensorFlow {
   private TensorFlow() {}
 
   /** Load the TensorFlow runtime C library. */
-  static void init() {
+  public static void init() { // FIXME public?
     try {
       NativeLibrary.load();
     } catch (Exception e) {

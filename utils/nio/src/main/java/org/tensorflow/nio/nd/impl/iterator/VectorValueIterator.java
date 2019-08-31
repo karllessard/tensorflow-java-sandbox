@@ -17,6 +17,7 @@
 package org.tensorflow.nio.nd.impl.iterator;
 
 import org.tensorflow.nio.nd.NdArray;
+import org.tensorflow.nio.nd.ValueIterator;
 
 class VectorValueIterator<T> implements ValueIterator<T> {
 
@@ -28,12 +29,12 @@ class VectorValueIterator<T> implements ValueIterator<T> {
   @Override
   public T next() {
     return array.get(currentIndex++);
-  }    
-  
+  }
+
   public void next(T value) {
     array.set(value, currentIndex++);
   }
-  
+
   VectorValueIterator(NdArray<T> array) {
     if (array.shape().numDimensions() != 1) {
       throw new IllegalArgumentException();
@@ -41,7 +42,7 @@ class VectorValueIterator<T> implements ValueIterator<T> {
     this.array = array;
     currentIndex = 0L;
   }
-  
+
   private final NdArray<T> array;
 
   private long currentIndex;

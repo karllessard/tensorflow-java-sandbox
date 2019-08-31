@@ -16,6 +16,10 @@ limitations under the License.
 package org.tensorflow;
 
 import java.util.Objects;
+import org.tensorflow.eager.EagerSession;
+import org.tensorflow.graph.Session;
+import org.tensorflow.nio.nd.Shape;
+import org.tensorflow.types.DataType;
 
 /**
  * A symbolic handle to a tensor produced by an {@link Operation}.
@@ -26,7 +30,7 @@ import java.util.Objects;
  * <p>By implementing the {@link Operand} interface, instances of this class also act as operands to
  * {@link org.tensorflow.op.Op Op} instances.
  */
-public final class Output<T> implements Operand<T> {
+public final class Output<T extends DataType<?>> implements Operand<T> {
 
   /** Returns the Operation that will produce the tensor referred to by this Output. */
   public Operation op() {
@@ -40,12 +44,13 @@ public final class Output<T> implements Operand<T> {
 
   /** Returns the (possibly partially known) shape of the tensor referred to by this Output. */
   public Shape shape() {
-    return new Shape(operation.shape(index));
+    return Shape.make(operation.shape(index));
   }
 
   /** Returns the DataType of the tensor referred to by this Output. */
-  public DataType dataType() {
-    return operation.dtype(index);
+  @SuppressWarnings("unchecked")
+  public T dataType() {
+    return (T)operation.dtype(index);
   }
 
   /**
@@ -99,7 +104,7 @@ public final class Output<T> implements Operand<T> {
     index = idx;
   }
 
-  long getUnsafeNativeHandle() {
+  public long getUnsafeNativeHandle() { // FIXME public?
     return operation.getUnsafeNativeHandle(index);
   }
 

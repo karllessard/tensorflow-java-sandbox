@@ -26,12 +26,12 @@ final class UnknownDimension extends AbstractDimension {
   public long numElements() {
     return Shape.UNKNOWN_SIZE;
   }
-  
+
   @Override
   public long positionOf(long coord) {
     return coord;
   }
-  
+
   @Override
   public boolean isSegmented() {
     return false;
@@ -47,7 +47,8 @@ final class UnknownDimension extends AbstractDimension {
     return "Unknown";
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return System.identityHashCode(this); // All unknown dimensions are distinct
   }
 

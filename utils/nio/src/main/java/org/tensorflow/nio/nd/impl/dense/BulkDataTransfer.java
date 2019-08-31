@@ -19,19 +19,29 @@ package org.tensorflow.nio.nd.impl.dense;
 import org.tensorflow.nio.buffer.DataBuffer;
 import org.tensorflow.nio.nd.impl.dimension.Dimension;
 
-class BulkDataTransfer<T> {
+final class BulkDataTransfer {
 
   @FunctionalInterface
   interface BulkCopy<T> {
+
     void invoke(DataBuffer<T> arrayBuffer, long bulkCopySize);
   }
-  
-  static <T> BulkDataTransfer<T> create(AbstractDenseNdArray<T, ?> array) {
+
+  /**
+   * Copy in bulk the given array by invoking recursively the {@code bulkCopy} operation
+   * for each chunk of contiguous data.
+   *
+   * @param array array implied in the copy
+   * @param bulkCopy the copy operation that should be invoked for each chunk of contiguous data
+   * @param <T> type of data
+   */
+  static <T> void execute(AbstractDenseNdArray<T, ?> array, BulkCopy<T> bulkCopy) {
     int bulkCopyDimensionIdx = -1;
     long bulkCopySize = 1L;
 
-    // Find what are the biggest chunk of data that we can copy in bulk by starting from the last dimension of this array and
-    // iterating backward until we hit a dimension that is segmented (if any)
+    // Find what are the biggest chunk of data that we can copy in bulk by starting from the
+    // last dimension of this array and iterating backward until we hit a dimension that is
+    // segmented (if any)
     for (int i = array.shape().numDimensions() - 1; i >= 0; --i) {
       Dimension dim = array.shape().dimension(i);
       if (dim.isSegmented()) {
@@ -41,30 +51,39 @@ class BulkDataTransfer<T> {
       bulkCopySize *= dim.numElements();
     }
     if (bulkCopyDimensionIdx < 0) {
-      throw new IllegalArgumentException("This array cannot be copied by bulk, since its last dimension is segmented");
+      throw new IllegalArgumentException(
+          "This array cannot be copied in bulk, since its last dimension is segmented");
     }
-    return new BulkDataTransfer<>(array, bulkCopyDimensionIdx, bulkCopySize);
-  }
-  
-  void execute(BulkCopy<T> bulkCopy) {
-    execute(bulkCopy, array, 0);
+    copyRecursively(bulkCopy, bulkCopyDimensionIdx, bulkCopySize, array, 0);
   }
 
-  private final AbstractDenseNdArray<T, ?> array;  // The array we want to copy in bulk
-  private final int bulkCopyDimensionIdx;  // The first dimension of this array that can be copied in bulk
-  private final long bulkCopySize;  // The number of values that can be copied in a single bulk copy
-
-  private BulkDataTransfer(AbstractDenseNdArray<T, ?> array, int bulkCopyDimensionIdx, long bulkCopySize) {
-    this.array = array;
-    this.bulkCopyDimensionIdx = bulkCopyDimensionIdx;
-    this.bulkCopySize = bulkCopySize;
-  }
-
-  private void execute(BulkCopy<T> bulkCopy, AbstractDenseNdArray<T, ?> element, int dimensionIdx) {
-    if (dimensionIdx == bulkCopyDimensionIdx) {
-      bulkCopy.invoke(element.buffer().duplicate(), bulkCopySize);
+  /**
+   * Recursively copy the data in bulk of the given element.
+   *
+   * @param bulkCopy the bulk copy operation
+   * @param bulkCopyDimensionIdx index of the first dimension that can be copied in bulk
+   * @param bulkCopySize number of values that can be copied in a single bulk operation
+   * @param currentElement the current element
+   * @param currentDimensionIdx the index of the dimension of the current element
+   * @param <T> type of data
+   */
+  private static <T> void copyRecursively(
+      BulkCopy<T> bulkCopy,
+      int bulkCopyDimensionIdx,
+      long bulkCopySize,
+      AbstractDenseNdArray<T, ?> currentElement,
+      int currentDimensionIdx
+  ) {
+    if (currentDimensionIdx == bulkCopyDimensionIdx) {
+      bulkCopy.invoke(currentElement.buffer().duplicate(), bulkCopySize);
     } else {
-      element.childElements().forEach(e -> execute(bulkCopy, (AbstractDenseNdArray<T, ?>)e, dimensionIdx + 1));
+      currentElement.childElements().forEach(e -> copyRecursively(
+          bulkCopy,
+          bulkCopyDimensionIdx,
+          bulkCopySize,
+          (AbstractDenseNdArray<T, ?>) e,
+          currentDimensionIdx + 1)
+      );
     }
   }
 }

@@ -20,7 +20,8 @@ import org.tensorflow.nio.buffer.ByteDataBuffer;
 import org.tensorflow.nio.nd.ByteNdArray;
 import org.tensorflow.nio.nd.Shape;
 
-public class ByteDenseNdArray extends AbstractDenseNdArray<Byte, ByteNdArray> implements ByteNdArray {
+public class ByteDenseNdArray extends AbstractDenseNdArray<Byte, ByteNdArray> implements
+    ByteNdArray {
 
   public static ByteNdArray wrap(ByteDataBuffer buffer, Shape shape) {
     Validator.denseShape(shape);

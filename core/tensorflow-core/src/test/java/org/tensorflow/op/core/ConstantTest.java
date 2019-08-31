@@ -31,8 +31,8 @@ import java.nio.LongBuffer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.tensorflow.Graph;
-import org.tensorflow.Session;
+import org.tensorflow.graph.Graph;
+import org.tensorflow.graph.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.op.Scope;
 

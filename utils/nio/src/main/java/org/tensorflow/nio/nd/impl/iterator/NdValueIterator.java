@@ -19,6 +19,7 @@ package org.tensorflow.nio.nd.impl.iterator;
 import java.util.Iterator;
 
 import org.tensorflow.nio.nd.NdArray;
+import org.tensorflow.nio.nd.ValueIterator;
 
 class NdValueIterator<T> implements ValueIterator<T> {
 
@@ -30,25 +31,25 @@ class NdValueIterator<T> implements ValueIterator<T> {
   @Override
   public T next() {
     return currentElementValueIterator().next();
-  }    
-  
+  }
+
   @Override
   public void next(T value) {
     currentElementValueIterator().next(value);
   }
-  
+
   NdValueIterator(NdArray<T> array) {
     elementIterator = array.childElements().iterator();
     currentElementValueIterator = elementIterator.next().values().iterator();
   }
-  
+
   private ValueIterator<T> currentElementValueIterator() {
     if (!currentElementValueIterator.hasNext()) {
       currentElementValueIterator = elementIterator.next().values().iterator();
     }
     return currentElementValueIterator;
   }
-  
+
   private Iterator<? extends NdArray<T>> elementIterator;
 
   private ValueIterator<T> currentElementValueIterator;

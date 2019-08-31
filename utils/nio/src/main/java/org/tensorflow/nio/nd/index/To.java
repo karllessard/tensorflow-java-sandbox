@@ -17,11 +17,9 @@
 package org.tensorflow.nio.nd.index;
 
 import org.tensorflow.nio.nd.impl.dimension.Dimension;
-import org.tensorflow.nio.nd.impl.dimension.Dimensions;
 
 /**
- * An index that returns only elements on a given dimension up to a
- * specific coordinate.
+ * An index that returns only elements on a given dimension up to a specific coordinate.
  *
  * <p>For example, given a vector with {@code n} elements on the {@code x} axis, and {@code n > k},
  * {@code to(k)} returns x<sub>0</sub>, x<sub>1</sub>, ..., x<sub>k</sub>
@@ -36,6 +34,14 @@ class To implements Index {
   @Override
   public long mapCoordinate(long coordinate, Dimension dim) {
     return coordinate;
+  }
+
+  @Override
+  public Dimension apply(Dimension dim) {
+    if (end > dim.numElements()) {
+      throw new IndexOutOfBoundsException("End coordinate exceeds the number of elements");
+    }
+    return end == dim.numElements() ? dim : Index.super.apply(dim);
   }
 
   To(long end) {

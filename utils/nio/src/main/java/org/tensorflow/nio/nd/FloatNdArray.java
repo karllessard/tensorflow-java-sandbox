@@ -28,13 +28,14 @@ public interface FloatNdArray extends NdArray<Float> {
   /**
    * Reads the content of this N-dimensional array into the destination float array.
    *
-   * <p>The size of the destination array must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
+   * <p>The size of the destination array must be equal or greater to the {@link #size()} of this
+   * array, or an exception is thrown. After the copy, content of the both arrays can be altered
    * independently, without affecting each other.
    *
    * @param dst the destination array
    * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
+   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of
+   * this array
    */
   default FloatNdArray read(float[] dst) {
     return read(DataBuffers.wrap(dst, false));
@@ -50,7 +51,8 @@ public interface FloatNdArray extends NdArray<Float> {
    * @param dst the destination array
    * @param offset the index of the first float to write in the destination array
    * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
+   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of
+   * this array
    * @throws IllegalArgumentException if offset is greater than dst length or is negative
    */
   default FloatNdArray read(float[] dst, int offset) {
@@ -66,7 +68,8 @@ public interface FloatNdArray extends NdArray<Float> {
    *
    * @param src the source array
    * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
+   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size
+   * of this array
    */
   default FloatNdArray write(float[] src) {
     return write(DataBuffers.wrap(src, false));
@@ -82,7 +85,8 @@ public interface FloatNdArray extends NdArray<Float> {
    * @param src the source array
    * @param offset the index of the first float to read from the source array
    * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
+   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size
+   * of this array
    * @throws IllegalArgumentException if offset is greater than src length or is negative
    */
   default FloatNdArray write(float[] src, int offset) {
@@ -90,8 +94,8 @@ public interface FloatNdArray extends NdArray<Float> {
   }
 
   @Override
-  FloatNdArray at(long... indices);
-  
+  FloatNdArray at(long... coordinates);
+
   @Override
   FloatNdArray slice(Index... indices);
 
@@ -99,7 +103,7 @@ public interface FloatNdArray extends NdArray<Float> {
   Iterable<FloatNdArray> childElements();
 
   @Override
-  FloatNdArray set(Float value, long... indices);
+  FloatNdArray set(Float value, long... coordinates);
 
   @Override
   FloatNdArray copyTo(NdArray<Float> dst);
