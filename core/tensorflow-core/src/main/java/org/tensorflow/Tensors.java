@@ -15,433 +15,92 @@ limitations under the License.
 
 package org.tensorflow;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import java.nio.charset.Charset;
+import org.tensorflow.nio.nd.NdArray;
+import org.tensorflow.nio.nd.NdArrays;
+import org.tensorflow.nio.nd.Shape;
+import org.tensorflow.types.TBool;
+import org.tensorflow.types.TDouble;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.TUInt8;
 
 /** DataType-safe factory methods for creating {@link org.tensorflow.Tensor} objects. */
 public final class Tensors {
   private Tensors() {}
 
-  /**
-   * Creates a scalar String tensor using the default, UTF-8 encoding.
-   *
-   * @param data The string to put into the new scalar tensor.
-   */
-  public static Tensor<String> create(String data) {
-    return Tensor.create(data.getBytes(UTF_8), String.class);
+  public static <T extends Tensor<?>> T of(DataType<T> dataType, Shape shape) {
+    return Tensor.allocate(dataType, shape);
   }
 
-  /**
-   * Creates a scalar String tensor using a specified encoding.
-   *
-   * @param charset The encoding from String to bytes.
-   * @param data The string to put into the new scalar tensor.
-   */
-  public static Tensor<String> create(String data, java.nio.charset.Charset charset) {
-    return Tensor.create(data.getBytes(charset), String.class);
+  public static <T extends Tensor<U>, U> T copyOf(DataType<T> dataType, NdArray<U> data) {
+    return Tensor.allocate(dataType, data);
   }
 
-  /**
-   * Creates a scalar tensor containing a single {@code float} element.
-   *
-   * @param data The value to put into the new scalar tensor.
-   */
-  public static Tensor<Float> create(float data) {
-    return Tensor.create(data, Float.class);
+  public static <T extends Tensor<U>, U> T scalar(DataType<T> dataType, U value) {
+    return Tensor.allocate(dataType, value);
   }
 
-  /**
-   * Creates a rank-1 tensor of {@code float} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Float> create(float[] data) {
-    return Tensor.create(data, Float.class);
+  public static TUInt8 scalar(byte value) {
+    return scalar(TUInt8.DTYPE, value);
   }
 
-  /**
-   * Creates a rank-2 tensor of {@code float} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Float> create(float[][] data) {
-    return Tensor.create(data, Float.class);
+  public static TInt32 scalar(int value) {
+    return scalar(TInt32.DTYPE, value);
   }
 
-  /**
-   * Creates a rank-3 tensor of {@code float} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Float> create(float[][][] data) {
-    return Tensor.create(data, Float.class);
+  public static TInt64 scalar(long value) {
+    return scalar(TInt64.DTYPE, value);
   }
 
-  /**
-   * Creates a rank-4 tensor of {@code float} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Float> create(float[][][][] data) {
-    return Tensor.create(data, Float.class);
+  public static TFloat scalar(float value) {
+    return scalar(TFloat.DTYPE, value);
   }
 
-  /**
-   * Creates a rank-5 tensor of {@code float} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Float> create(float[][][][][] data) {
-    return Tensor.create(data, Float.class);
+  public static TDouble scalar(double value) {
+    return scalar(TDouble.DTYPE, value);
   }
 
-  /**
-   * Creates a rank-6 tensor of {@code float} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Float> create(float[][][][][][] data) {
-    return Tensor.create(data, Float.class);
+  public static TString scalar(String value, Charset charset) {
+    //return scalar(TString.DTYPE, value.getBytes(charset)); // TODO charset!
+    return scalar(TString.DTYPE, value); // TODO charset!
   }
 
-  /**
-   * Creates a scalar tensor containing a single {@code double} element.
-   *
-   * @param data The value to put into the new scalar tensor.
-   */
-  public static Tensor<Double> create(double data) {
-    return Tensor.create(data, Double.class);
+  public static TBool scalar(boolean value) {
+    return scalar(TBool.DTYPE, value);
   }
 
-  /**
-   * Creates a rank-1 tensor of {@code double} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Double> create(double[] data) {
-    return Tensor.create(data, Double.class);
+  public static <T extends Tensor<U>, U> T vector(DataType<T> dataType, U[] values) {
+    return Tensor.allocate(dataType, NdArrays.wrap(values, Shape.make(values.length)));
   }
 
-  /**
-   * Creates a rank-2 tensor of {@code double} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Double> create(double[][] data) {
-    return Tensor.create(data, Double.class);
+  public static TUInt8 vector(byte[] values) {
+    return Tensor.allocate(TUInt8.DTYPE, NdArrays.wrap(values, Shape.make(values.length)));
   }
 
-  /**
-   * Creates a rank-3 tensor of {@code double} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Double> create(double[][][] data) {
-    return Tensor.create(data, Double.class);
+  public static TInt32 vector(int[] values) {
+    return Tensor.allocate(TInt32.DTYPE, NdArrays.wrap(values, Shape.make(values.length)));
   }
 
-  /**
-   * Creates a rank-4 tensor of {@code double} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Double> create(double[][][][] data) {
-    return Tensor.create(data, Double.class);
+  public static TInt64 vector(long[] values) {
+    return Tensor.allocate(TInt64.DTYPE, NdArrays.wrap(values, Shape.make(values.length)));
   }
 
-  /**
-   * Creates a rank-5 tensor of {@code double} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Double> create(double[][][][][] data) {
-    return Tensor.create(data, Double.class);
+  public static TFloat vector(float[] values) {
+    return Tensor.allocate(TFloat.DTYPE, NdArrays.wrap(values, Shape.make(values.length)));
   }
 
-  /**
-   * Creates a rank-6 tensor of {@code double} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Double> create(double[][][][][][] data) {
-    return Tensor.create(data, Double.class);
+  public static TDouble vector(double[] values) {
+    return Tensor.allocate(TDouble.DTYPE, NdArrays.wrap(values, Shape.make(values.length)));
   }
 
-  /**
-   * Creates a scalar tensor containing a single {@code int} element.
-   *
-   * @param data The value to put into the new scalar tensor.
-   */
-  public static Tensor<Integer> create(int data) {
-    return Tensor.create(data, Integer.class);
+  public static TString vector(String[] values, Charset charset) {
+    return Tensor.allocate(TString.DTYPE, NdArrays.wrap(values, Shape.make(values.length))); // TODO charset
   }
 
-  /**
-   * Creates a rank-1 tensor of {@code int} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Integer> create(int[] data) {
-    return Tensor.create(data, Integer.class);
-  }
-
-  /**
-   * Creates a rank-2 tensor of {@code int} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Integer> create(int[][] data) {
-    return Tensor.create(data, Integer.class);
-  }
-
-  /**
-   * Creates a rank-3 tensor of {@code int} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Integer> create(int[][][] data) {
-    return Tensor.create(data, Integer.class);
-  }
-
-  /**
-   * Creates a rank-4 tensor of {@code int} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Integer> create(int[][][][] data) {
-    return Tensor.create(data, Integer.class);
-  }
-
-  /**
-   * Creates a rank-5 tensor of {@code int} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Integer> create(int[][][][][] data) {
-    return Tensor.create(data, Integer.class);
-  }
-
-  /**
-   * Creates a rank-6 tensor of {@code int} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Integer> create(int[][][][][][] data) {
-    return Tensor.create(data, Integer.class);
-  }
-
-  /**
-   * Creates a scalar tensor containing a single {@code byte} element.
-   *
-   * @param data An array containing the data to put into the new tensor. String elements are
-   *     sequences of bytes from the last array dimension.
-   */
-  public static Tensor<String> create(byte[] data) {
-    return Tensor.create(data, String.class);
-  }
-
-  /**
-   * Creates a rank-1 tensor of {@code byte} elements.
-   *
-   * @param data An array containing the data to put into the new tensor. String elements are
-   *     sequences of bytes from the last array dimension.
-   */
-  public static Tensor<String> create(byte[][] data) {
-    return Tensor.create(data, String.class);
-  }
-
-  /**
-   * Creates a rank-2 tensor of {@code byte} elements.
-   *
-   * @param data An array containing the data to put into the new tensor. String elements are
-   *     sequences of bytes from the last array dimension.
-   */
-  public static Tensor<String> create(byte[][][] data) {
-    return Tensor.create(data, String.class);
-  }
-
-  /**
-   * Creates a rank-3 tensor of {@code byte} elements.
-   *
-   * @param data An array containing the data to put into the new tensor. String elements are
-   *     sequences of bytes from the last array dimension.
-   */
-  public static Tensor<String> create(byte[][][][] data) {
-    return Tensor.create(data, String.class);
-  }
-
-  /**
-   * Creates a rank-4 tensor of {@code byte} elements.
-   *
-   * @param data An array containing the data to put into the new tensor. String elements are
-   *     sequences of bytes from the last array dimension.
-   */
-  public static Tensor<String> create(byte[][][][][] data) {
-    return Tensor.create(data, String.class);
-  }
-
-  /**
-   * Creates a rank-5 tensor of {@code byte} elements.
-   *
-   * @param data An array containing the data to put into the new tensor. String elements are
-   *     sequences of bytes from the last array dimension.
-   */
-  public static Tensor<String> create(byte[][][][][][] data) {
-    return Tensor.create(data, String.class);
-  }
-
-  /**
-   * Creates a scalar tensor containing a single {@code long} element.
-   *
-   * @param data The value to put into the new scalar tensor.
-   */
-  public static Tensor<Long> create(long data) {
-    return Tensor.create(data, Long.class);
-  }
-
-  /**
-   * Creates a rank-1 tensor of {@code long} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Long> create(long[] data) {
-    return Tensor.create(data, Long.class);
-  }
-
-  /**
-   * Creates a rank-2 tensor of {@code long} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Long> create(long[][] data) {
-    return Tensor.create(data, Long.class);
-  }
-
-  /**
-   * Creates a rank-3 tensor of {@code long} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Long> create(long[][][] data) {
-    return Tensor.create(data, Long.class);
-  }
-
-  /**
-   * Creates a rank-4 tensor of {@code long} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Long> create(long[][][][] data) {
-    return Tensor.create(data, Long.class);
-  }
-
-  /**
-   * Creates a rank-5 tensor of {@code long} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Long> create(long[][][][][] data) {
-    return Tensor.create(data, Long.class);
-  }
-
-  /**
-   * Creates a rank-6 tensor of {@code long} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Long> create(long[][][][][][] data) {
-    return Tensor.create(data, Long.class);
-  }
-
-  /**
-   * Creates a scalar tensor containing a single {@code boolean} element.
-   *
-   * @param data The value to put into the new scalar tensor.
-   */
-  public static Tensor<Boolean> create(boolean data) {
-    return Tensor.create(data, Boolean.class);
-  }
-
-  /**
-   * Creates a rank-1 tensor of {@code boolean} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Boolean> create(boolean[] data) {
-    return Tensor.create(data, Boolean.class);
-  }
-
-  /**
-   * Creates a rank-2 tensor of {@code boolean} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Boolean> create(boolean[][] data) {
-    return Tensor.create(data, Boolean.class);
-  }
-
-  /**
-   * Creates a rank-3 tensor of {@code boolean} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Boolean> create(boolean[][][] data) {
-    return Tensor.create(data, Boolean.class);
-  }
-
-  /**
-   * Creates a rank-4 tensor of {@code boolean} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Boolean> create(boolean[][][][] data) {
-    return Tensor.create(data, Boolean.class);
-  }
-
-  /**
-   * Creates a rank-5 tensor of {@code boolean} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Boolean> create(boolean[][][][][] data) {
-    return Tensor.create(data, Boolean.class);
-  }
-
-  /**
-   * Creates a rank-6 tensor of {@code boolean} elements.
-   *
-   * @param data An array containing the values to put into the new tensor. The dimensions of the
-   *     new tensor will match those of the array.
-   */
-  public static Tensor<Boolean> create(boolean[][][][][][] data) {
-    return Tensor.create(data, Boolean.class);
+  public static TBool vector(boolean[] values) {
+    return null; // TODO!
   }
 }

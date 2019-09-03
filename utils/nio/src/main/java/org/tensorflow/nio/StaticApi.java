@@ -23,11 +23,6 @@ import org.tensorflow.nio.buffer.DoubleDataBuffer;
 import org.tensorflow.nio.buffer.FloatDataBuffer;
 import org.tensorflow.nio.buffer.IntDataBuffer;
 import org.tensorflow.nio.buffer.LongDataBuffer;
-import org.tensorflow.nio.nd.ByteNdArray;
-import org.tensorflow.nio.nd.DoubleNdArray;
-import org.tensorflow.nio.nd.FloatNdArray;
-import org.tensorflow.nio.nd.IntNdArray;
-import org.tensorflow.nio.nd.LongNdArray;
 import org.tensorflow.nio.nd.NdArray;
 import org.tensorflow.nio.nd.NdArrays;
 import org.tensorflow.nio.nd.Shape;
@@ -205,7 +200,7 @@ public class StaticApi {
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static ByteNdArray ndArrayOfBytes(Shape shape) {
+  public static NdArray<Byte> ndArrayOfBytes(Shape shape) {
     return NdArrays.ofBytes(shape);
   }
 
@@ -216,19 +211,8 @@ public class StaticApi {
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static ByteNdArray ndArrayOf(byte[] values, Shape shape) {
+  public static NdArray<Byte> ndArrayOf(byte[] values, Shape shape) {
     return NdArrays.wrap(values, shape);
-  }
-
-  /**
-   * Wraps a byte data buffer into an N-dimensional array
-   *
-   * @param buffer buffer to wrap
-   * @param shape shape of the N-dimensional array
-   * @return the new N-dimensional array
-   */
-  public static ByteNdArray ndArrayOf(ByteDataBuffer buffer, Shape shape) {
-    return NdArrays.wrap(buffer, shape);
   }
 
   /**
@@ -237,8 +221,8 @@ public class StaticApi {
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static IntNdArray ndArrayOfInts(Shape shape) {
-    return NdArrays.ofIntegers(shape);
+  public static NdArray<Integer> ndArrayOfInts(Shape shape) {
+    return NdArrays.ofInts(shape);
   }
 
   /**
@@ -248,19 +232,8 @@ public class StaticApi {
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static IntNdArray ndArrayOf(int[] values, Shape shape) {
+  public static NdArray<Integer> ndArrayOf(int[] values, Shape shape) {
     return NdArrays.wrap(values, shape);
-  }
-
-  /**
-   * Wraps an integer data buffer into an N-dimensional array
-   *
-   * @param buffer buffer to wrap
-   * @param shape shape of the N-dimensional array
-   * @return the new N-dimensional array
-   */
-  public static IntNdArray ndArrayOf(IntDataBuffer buffer, Shape shape) {
-    return NdArrays.wrap(buffer, shape);
   }
 
   /**
@@ -269,7 +242,7 @@ public class StaticApi {
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static LongNdArray ndArrayOfLongs(Shape shape) {
+  public static NdArray<Long> ndArrayOfLongs(Shape shape) {
     return NdArrays.ofLongs(shape);
   }
 
@@ -280,19 +253,8 @@ public class StaticApi {
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static LongNdArray ndArrayOf(long[] values, Shape shape) {
+  public static NdArray<Long> ndArrayOf(long[] values, Shape shape) {
     return NdArrays.wrap(values, shape);
-  }
-
-  /**
-   * Wraps a long data buffer into an N-dimensional array
-   *
-   * @param buffer buffer to wrap
-   * @param shape shape of the N-dimensional array
-   * @return the new N-dimensional array
-   */
-  public static LongNdArray ndArrayOf(LongDataBuffer buffer, Shape shape) {
-    return NdArrays.wrap(buffer, shape);
   }
 
   /**
@@ -301,7 +263,7 @@ public class StaticApi {
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static FloatNdArray ndArrayOfFloats(Shape shape) {
+  public static NdArray<Float> ndArrayOfFloats(Shape shape) {
     return NdArrays.ofFloats(shape);
   }
 
@@ -312,19 +274,8 @@ public class StaticApi {
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static FloatNdArray ndArrayOf(float[] values, Shape shape) {
+  public static NdArray<Float> ndArrayOf(float[] values, Shape shape) {
     return NdArrays.wrap(values, shape);
-  }
-
-  /**
-   * Wraps a float data buffer into an N-dimensional array
-   *
-   * @param buffer buffer to wrap
-   * @param shape shape of the N-dimensional array
-   * @return the new N-dimensional array
-   */
-  public static FloatNdArray ndArrayOf(FloatDataBuffer buffer, Shape shape) {
-    return NdArrays.wrap(buffer, shape);
   }
 
   /**
@@ -333,7 +284,7 @@ public class StaticApi {
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static DoubleNdArray ndArrayOfDoubles(Shape shape) {
+  public static NdArray<Double> ndArrayOfDoubles(Shape shape) {
     return NdArrays.ofDoubles(shape);
   }
 
@@ -344,19 +295,8 @@ public class StaticApi {
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static DoubleNdArray ndArrayOf(double[] values, Shape shape) {
+  public static NdArray<Double> ndArrayOf(double[] values, Shape shape) {
     return NdArrays.wrap(values, shape);
-  }
-
-  /**
-   * Wraps a double data buffer into an N-dimensional array
-   *
-   * @param buffer buffer to wrap
-   * @param shape shape of the N-dimensional array
-   * @return the new N-dimensional array
-   */
-  public static DoubleNdArray ndArrayOf(DoubleDataBuffer buffer, Shape shape) {
-    return NdArrays.wrap(buffer, shape);
   }
 
   /**

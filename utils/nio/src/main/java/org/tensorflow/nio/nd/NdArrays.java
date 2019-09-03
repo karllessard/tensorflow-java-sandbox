@@ -16,19 +16,9 @@
  */
 package org.tensorflow.nio.nd;
 
-import org.tensorflow.nio.buffer.ByteDataBuffer;
 import org.tensorflow.nio.buffer.DataBuffer;
 import org.tensorflow.nio.buffer.DataBuffers;
-import org.tensorflow.nio.buffer.DoubleDataBuffer;
-import org.tensorflow.nio.buffer.FloatDataBuffer;
-import org.tensorflow.nio.buffer.IntDataBuffer;
-import org.tensorflow.nio.buffer.LongDataBuffer;
-import org.tensorflow.nio.nd.impl.dense.ByteDenseNdArray;
-import org.tensorflow.nio.nd.impl.dense.DenseNdArray;
-import org.tensorflow.nio.nd.impl.dense.DoubleDenseNdArray;
-import org.tensorflow.nio.nd.impl.dense.FloatDenseNdArray;
-import org.tensorflow.nio.nd.impl.dense.IntDenseNdArray;
-import org.tensorflow.nio.nd.impl.dense.LongDenseNdArray;
+import org.tensorflow.nio.nd.impl.DefaultNdArray;
 
 /**
  * Helper class for creating {@link NdArray} instances
@@ -41,7 +31,7 @@ public final class NdArrays {
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static ByteNdArray ofBytes(Shape shape) {
+  public static NdArray<Byte> ofBytes(Shape shape) {
     return wrap(DataBuffers.ofBytes(shape.size()), shape);
   }
 
@@ -52,19 +42,8 @@ public final class NdArrays {
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static ByteNdArray wrap(byte[] values, Shape shape) {
+  public static NdArray<Byte> wrap(byte[] values, Shape shape) {
     return wrap(DataBuffers.wrap(values, false), shape);
-  }
-
-  /**
-   * Wraps a byte data buffer into an N-dimensional array
-   *
-   * @param buffer buffer to wrap
-   * @param shape shape of the N-dimensional array
-   * @return the new N-dimensional array
-   */
-  public static ByteNdArray wrap(ByteDataBuffer buffer, Shape shape) {
-    return ByteDenseNdArray.wrap(buffer, shape);
   }
 
   /**
@@ -73,30 +52,19 @@ public final class NdArrays {
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static LongNdArray ofLongs(Shape shape) {
+  public static NdArray<Long> ofLongs(Shape shape) {
     return wrap(DataBuffers.ofLongs(shape.size()), shape);
   }
 
   /**
    * Wraps a long array into an N-dimensional array
    *
-   * @param values integer array to wrap
+   * @param values long array to wrap
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static LongNdArray wrap(long[] values, Shape shape) {
+  public static NdArray<Long> wrap(long[] values, Shape shape) {
     return wrap(DataBuffers.wrap(values, false), shape);
-  }
-
-  /**
-   * Wraps a long data buffer into an N-dimensional array
-   *
-   * @param buffer buffer to wrap
-   * @param shape shape of the N-dimensional array
-   * @return the new N-dimensional array
-   */
-  public static LongNdArray wrap(LongDataBuffer buffer, Shape shape) {
-    return LongDenseNdArray.wrap(buffer, shape);
   }
 
   /**
@@ -105,7 +73,7 @@ public final class NdArrays {
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static IntNdArray ofIntegers(Shape shape) {
+  public static NdArray<Integer> ofInts(Shape shape) {
     return wrap(DataBuffers.ofIntegers(shape.size()), shape);
   }
 
@@ -116,19 +84,8 @@ public final class NdArrays {
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static IntNdArray wrap(int[] values, Shape shape) {
+  public static NdArray<Integer> wrap(int[] values, Shape shape) {
     return wrap(DataBuffers.wrap(values, false), shape);
-  }
-
-  /**
-   * Wraps an integer data buffer into an N-dimensional array
-   *
-   * @param buffer buffer to wrap
-   * @param shape shape of the N-dimensional array
-   * @return the new N-dimensional array
-   */
-  public static IntNdArray wrap(IntDataBuffer buffer, Shape shape) {
-    return IntDenseNdArray.wrap(buffer, shape);
   }
 
   /**
@@ -137,10 +94,9 @@ public final class NdArrays {
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static FloatNdArray ofFloats(Shape shape) {
+  public static NdArray<Float> ofFloats(Shape shape) {
     return wrap(DataBuffers.ofFloats(shape.size()), shape);
   }
-
   /**
    * Wraps a float array into an N-dimensional array
    *
@@ -148,19 +104,8 @@ public final class NdArrays {
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static FloatNdArray wrap(float[] values, Shape shape) {
+  public static NdArray<Float> wrap(float[] values, Shape shape) {
     return wrap(DataBuffers.wrap(values, false), shape);
-  }
-
-  /**
-   * Wraps a float data buffer into an N-dimensional array
-   *
-   * @param buffer buffer to wrap
-   * @param shape shape of the N-dimensional array
-   * @return the new N-dimensional array
-   */
-  public static FloatNdArray wrap(FloatDataBuffer buffer, Shape shape) {
-    return FloatDenseNdArray.wrap(buffer, shape);
   }
 
   /**
@@ -169,7 +114,7 @@ public final class NdArrays {
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static DoubleNdArray ofDoubles(Shape shape) {
+  public static NdArray<Double> ofDoubles(Shape shape) {
     return wrap(DataBuffers.ofDoubles(shape.size()), shape);
   }
 
@@ -180,19 +125,8 @@ public final class NdArrays {
    * @param shape shape of the N-dimensional array
    * @return the new N-dimensional array
    */
-  public static DoubleNdArray wrap(double[] values, Shape shape) {
+  public static NdArray<Double> wrap(double[] values, Shape shape) {
     return wrap(DataBuffers.wrap(values, false), shape);
-  }
-
-  /**
-   * Wraps a double data buffer into an N-dimensional array
-   *
-   * @param buffer buffer to wrap
-   * @param shape shape of the N-dimensional array
-   * @return the new N-dimensional array
-   */
-  public static DoubleNdArray wrap(DoubleDataBuffer buffer, Shape shape) {
-    return DoubleDenseNdArray.wrap(buffer, shape);
   }
 
   /**
@@ -225,7 +159,7 @@ public final class NdArrays {
    * @return the new N-dimensional array
    */
   public static <T> NdArray<T> wrap(DataBuffer<T> buffer, Shape shape) {
-    return DenseNdArray.wrap(buffer, shape);
+    return DefaultNdArray.wrap(buffer, shape);
   }
 }
 

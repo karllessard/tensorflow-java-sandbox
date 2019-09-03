@@ -17,21 +17,29 @@ package org.tensorflow.op.core;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import java.nio.charset.Charset;
-
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.Output;
 import org.tensorflow.Tensor;
+import org.tensorflow.Tensors;
+import org.tensorflow.nio.nd.NdArray;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TBool;
+import org.tensorflow.types.TDouble;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /** An operator producing a constant value. */
 @Operator
@@ -44,8 +52,10 @@ public final class Constant<T> extends PrimitiveOp implements Operand<T> {
    * @param data The value to put into the new constant.
    * @return an integer constant
    */
-  public static Constant<Integer> create(Scope scope, int data) {
-    return create(scope, data, Integer.class);
+  public static Constant<TInt32> create(Scope scope, int data) {
+    try (TInt32 t = Tensors.scalar(data)) {
+      return create(scope, t);
+    }
   }
 
   /**
@@ -55,82 +65,9 @@ public final class Constant<T> extends PrimitiveOp implements Operand<T> {
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
    */
-  public static Constant<Integer> create(Scope scope, int[] data) {
-    return create(scope, data, Integer.class);
-  }
-
-  /**
-   * Creates a rank-2 constant of {@code int} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Integer> create(Scope scope, int[][] data) {
-    return create(scope, data, Integer.class);
-  }
-
-  /**
-   * Creates a rank-3 constant of {@code int} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Integer> create(Scope scope, int[][][] data) {
-    return create(scope, data, Integer.class);
-  }
-
-  /**
-   * Creates a rank-4 constant of {@code int} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Integer> create(Scope scope, int[][][][] data) {
-    return create(scope, data, Integer.class);
-  }
-
-  /**
-   * Creates a rank-5 constant of {@code int} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Integer> create(Scope scope, int[][][][][] data) {
-    return create(scope, data, Integer.class);
-  }
-
-  /**
-   * Creates a rank-6 constant of {@code int} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Integer> create(Scope scope, int[][][][][][] data) {
-    return create(scope, data, Integer.class);
-  }
-
-  /**
-   * Create a {@link DataType#INT32} constant with data from the given buffer.
-   *
-   * <p>Creates a constant with the given shape by copying elements from the buffer (starting from
-   * its current position) into the tensor. For example, if {@code shape = {2,3} } (which represents
-   * a 2x3 matrix) then the buffer must have 6 elements remaining, which will be consumed by this
-   * method.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param shape the tensor shape.
-   * @param data a buffer containing the tensor data.
-   * @return an integer constant
-   * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-   */
-  public static Constant<Integer> create(Scope scope, long[] shape, IntBuffer data) {
-    try (Tensor<Integer> value = Tensor.create(shape, data)) {
-      return createWithTensor(scope, value);
+  public static Constant<TInt32> create(Scope scope, int[] data) {
+    try (TInt32 t = Tensors.vector(data)) {
+      return create(scope, t);
     }
   }
 
@@ -141,8 +78,10 @@ public final class Constant<T> extends PrimitiveOp implements Operand<T> {
    * @param data The value to put into the new constant. 
    * @return a float constant
    */
-  public static Constant<Float> create(Scope scope, float data) {
-    return create(scope, data, Float.class);
+  public static Constant<TFloat> create(Scope scope, float data) {
+    try (TFloat t = Tensors.scalar(data)) {
+      return create(scope, t);
+    }
   }
 
   /**
@@ -152,82 +91,9 @@ public final class Constant<T> extends PrimitiveOp implements Operand<T> {
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
    */
-  public static Constant<Float> create(Scope scope, float[] data) {
-    return create(scope, data, Float.class);
-  }
-
-  /**
-   * Creates a rank-2 constant of {@code float} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Float> create(Scope scope, float[][] data) {
-    return create(scope, data, Float.class);
-  }
-
-  /**
-   * Creates a rank-3 constant of {@code float} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Float> create(Scope scope, float[][][] data) {
-    return create(scope, data, Float.class);
-  }
-
-  /**
-   * Creates a rank-4 constant of {@code float} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Float> create(Scope scope, float[][][][] data) {
-    return create(scope, data, Float.class);
-  }
-
-  /**
-   * Creates a rank-5 constant of {@code float} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Float> create(Scope scope, float[][][][][] data) {
-    return create(scope, data, Float.class);
-  }
-
-  /**
-   * Creates a rank-6 constant of {@code float} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Float> create(Scope scope, float[][][][][][] data) {
-    return create(scope, data, Float.class);
-  }
-
-  /**
-   * Create a {@link DataType#FLOAT} constant with data from the given buffer.
-   *
-   * <p>Creates a constant with the given shape by copying elements from the buffer (starting from
-   * its current position) into the tensor. For example, if {@code shape = {2,3} } (which represents
-   * a 2x3 matrix) then the buffer must have 6 elements remaining, which will be consumed by this
-   * method.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param shape the tensor shape.
-   * @param data a buffer containing the tensor data.
-   * @return a float constant
-   * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-   */
-  public static Constant<Float> create(Scope scope, long[] shape, FloatBuffer data) {
-    try (Tensor<Float> value = Tensor.create(shape, data)) {
-      return createWithTensor(scope, value);
+  public static Constant<TFloat> create(Scope scope, float[] data) {
+    try (TFloat t = Tensors.vector(data)) {
+      return create(scope, t);
     }
   }
 
@@ -238,8 +104,10 @@ public final class Constant<T> extends PrimitiveOp implements Operand<T> {
    * @param data The value to put into the new constant.
    * @return a double constant
    */
-  public static Constant<Double> create(Scope scope, double data) {
-    return create(scope, data, Double.class);
+  public static Constant<TDouble> create(Scope scope, double data) {
+    try (TDouble t = Tensors.scalar(data)) {
+      return create(scope, t);
+    }
   }
 
   /**
@@ -249,82 +117,9 @@ public final class Constant<T> extends PrimitiveOp implements Operand<T> {
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
    */
-  public static Constant<Double> create(Scope scope, double[] data) {
-    return create(scope, data, Double.class);
-  }
-
-  /**
-   * Creates a rank-2 constant of {@code double} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Double> create(Scope scope, double[][] data) {
-    return create(scope, data, Double.class);
-  }
-
-  /**
-   * Creates a rank-3 constant of {@code double} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Double> create(Scope scope, double[][][] data) {
-    return create(scope, data, Double.class);
-  }
-
-  /**
-   * Creates a rank-4 constant of {@code double} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Double> create(Scope scope, double[][][][] data) {
-    return create(scope, data, Double.class);
-  }
-
-  /**
-   * Creates a rank-5 constant of {@code double} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Double> create(Scope scope, double[][][][][] data) {
-    return create(scope, data, Double.class);
-  }
-
-  /**
-   * Creates a rank-6 constant of {@code double} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Double> create(Scope scope, double[][][][][][] data) {
-    return create(scope, data, Double.class);
-  }
-
-  /**
-   * Create a {@link DataType#DOUBLE} constant with data from the given buffer.
-   *
-   * <p>Creates a constant with the given shape by copying elements from the buffer (starting from
-   * its current position) into the tensor. For example, if {@code shape = {2,3} } (which represents
-   * a 2x3 matrix) then the buffer must have 6 elements remaining, which will be consumed by this
-   * method.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param shape the tensor shape.
-   * @param data a buffer containing the tensor data.
-   * @return a double constant
-   * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-   */
-  public static Constant<Double> create(Scope scope, long[] shape, DoubleBuffer data) {
-    try (Tensor<Double> value = Tensor.create(shape, data)) {
-      return createWithTensor(scope, value);
+  public static Constant<TDouble> create(Scope scope, double[] data) {
+    try (TDouble t = Tensors.vector(data)) {
+      return create(scope, t);
     }
   }
 
@@ -335,8 +130,10 @@ public final class Constant<T> extends PrimitiveOp implements Operand<T> {
    * @param data The value to put into the new constant.
    * @return a long constant
    */
-  public static Constant<Long> create(Scope scope, long data) {
-    return create(scope, data, Long.class);
+  public static Constant<TInt64> create(Scope scope, long data) {
+    try (TInt64 t = Tensors.scalar(data)) {
+      return create(scope, t);
+    }
   }
 
   /**
@@ -346,82 +143,9 @@ public final class Constant<T> extends PrimitiveOp implements Operand<T> {
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
    */
-  public static Constant<Long> create(Scope scope, long[] data) {
-    return create(scope, data, Long.class);
-  }
-
-  /**
-   * Creates a rank-2 constant of {@code long} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Long> create(Scope scope, long[][] data) {
-    return create(scope, data, Long.class);
-  }
-
-  /**
-   * Creates a rank-3 constant of {@code long} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Long> create(Scope scope, long[][][] data) {
-    return create(scope, data, Long.class);
-  }
-
-  /**
-   * Creates a rank-4 constant of {@code long} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Long> create(Scope scope, long[][][][] data) {
-    return create(scope, data, Long.class);
-  }
-
-  /**
-   * Creates a rank-5 constant of {@code long} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Long> create(Scope scope, long[][][][][] data) {
-    return create(scope, data, Long.class);
-  }
-
-  /**
-   * Creates a rank-6 constant of {@code long} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Long> create(Scope scope, long[][][][][][] data) {
-    return create(scope, data, Long.class);
-  }
-
-  /**
-   * Create a {@link DataType#INT64} constant with data from the given buffer.
-   *
-   * <p>Creates a constant with the given shape by copying elements from the buffer (starting from
-   * its current position) into the tensor. For example, if {@code shape = {2,3} } (which represents
-   * a 2x3 matrix) then the buffer must have 6 elements remaining, which will be consumed by this
-   * method.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param shape the tensor shape.
-   * @param data a buffer containing the tensor data.
-   * @return a long constant
-   * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-   */
-  public static Constant<Long> create(Scope scope, long[] shape, LongBuffer data) {
-    try (Tensor<Long> value = Tensor.create(shape, data)) {
-      return createWithTensor(scope, value);
+  public static Constant<TInt64> create(Scope scope, long[] data) {
+    try (TInt64 t = Tensors.vector(data)) {
+      return create(scope, t);
     }
   }
 
@@ -432,8 +156,10 @@ public final class Constant<T> extends PrimitiveOp implements Operand<T> {
    * @param data The value to put into the new constant.
    * @return a boolean constant
    */
-  public static Constant<Boolean> create(Scope scope, boolean data) {
-    return create(scope, data, Boolean.class);
+  public static Constant<TBool> create(Scope scope, boolean data) {
+    try (TBool t = Tensors.scalar(data)) {
+      return create(scope, t);
+    }
   }
 
   /**
@@ -443,63 +169,10 @@ public final class Constant<T> extends PrimitiveOp implements Operand<T> {
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
    */
-  public static Constant<Boolean> create(Scope scope, boolean[] data) {
-    return create(scope, data, Boolean.class);
-  }
-
-  /**
-   * Creates a rank-2 constant of {@code boolean} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Boolean> create(Scope scope, boolean[][] data) {
-    return create(scope, data, Boolean.class);
-  }
-
-  /**
-   * Creates a rank-3 constant of {@code boolean} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Boolean> create(Scope scope, boolean[][][] data) {
-    return create(scope, data, Boolean.class);
-  }
-
-  /**
-   * Creates a rank-4 constant of {@code boolean} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Boolean> create(Scope scope, boolean[][][][] data) {
-    return create(scope, data, Boolean.class);
-  }
-
-  /**
-   * Creates a rank-5 constant of {@code boolean} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Boolean> create(Scope scope, boolean[][][][][] data) {
-    return create(scope, data, Boolean.class);
-  }
-
-  /**
-   * Creates a rank-6 constant of {@code boolean} elements.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
-   */
-  public static Constant<Boolean> create(Scope scope, boolean[][][][][][] data) {
-    return create(scope, data, Boolean.class);
+  public static Constant<TBool> create(Scope scope, boolean[] data) {
+    try (TBool t = Tensors.vector(data)) {
+      return create(scope, t);
+    }
   }
 
   /**
@@ -509,8 +182,10 @@ public final class Constant<T> extends PrimitiveOp implements Operand<T> {
    * @param data The string to put into the new constant.
    * @return a string constant
    */
-  public static Constant<String> create(Scope scope, String data) {
-    return create(scope, data, UTF_8);
+  public static Constant<TString> create(Scope scope, String data) {
+    try (TString t = Tensors.scalar(data, UTF_8)) {
+      return create(scope, t);
+    }
   }
 
   /**
@@ -521,76 +196,10 @@ public final class Constant<T> extends PrimitiveOp implements Operand<T> {
    * @param data The string to put into the new constant.
    * @return a string constant
    */
-  public static Constant<String> create(Scope scope, String data, Charset charset) {
-    try (Tensor<String> value = Tensor.create(data.getBytes(charset), String.class)) {
-      return createWithTensor(scope, value);
+  public static Constant<TString> create(Scope scope, String data, Charset charset) {
+    try (TString t = Tensors.scalar(data, charset)) {
+      return create(scope, t);
     }
-  }
-
-  /**
-   * Creates a constant containing a single {@code String} element, represented as an array of {@code byte}s.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. String elements are
-   *     sequences of bytes from the last array dimension.
-   */
-  public static Constant<String> create(Scope scope, byte[] data) {
-    return create(scope, data, String.class);
-  }
-
-  /**
-   * Creates a rank-1 constant of {@code String} elements, each represented as an array of {@code byte}s.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. String elements are
-   *     sequences of bytes from the last array dimension.
-   */
-  public static Constant<String> create(Scope scope, byte[][] data) {
-    return create(scope, data, String.class);
-  }
-
-  /**
-   * Creates a rank-2 constant of {@code String} elements, each represented as an array of {@code byte}s.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. String elements are
-   *     sequences of bytes from the last array dimension.
-   */
-  public static Constant<String> create(Scope scope, byte[][][] data) {
-    return create(scope, data, String.class);
-  }
-
-  /**
-   * Creates a rank-3 constant of {@code String} elements, each represented as an array of {@code byte}s.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. String elements are
-   *     sequences of bytes from the last array dimension.
-   */
-  public static Constant<String> create(Scope scope, byte[][][][] data) {
-    return create(scope, data, String.class);
-  }
-
-  /**
-   * Creates a rank-4 constant of {@code String} elements, each represented as an array of {@code byte}s.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. String elements are
-   *     sequences of bytes from the last array dimension.
-   */
-  public static Constant<String> create(Scope scope, byte[][][][][] data) {
-    return create(scope, data, String.class);
-  }
-
-  /**
-   * Creates a rank-5 constant of {@code String} elements, each represented as an array of {@code byte}s.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. String elements are
-   *     sequences of bytes from the last array dimension.
-   */
-  public static Constant<String> create(Scope scope, byte[][][][][][] data) {
-    return create(scope, data, String.class);
   }
 
   /**
@@ -609,9 +218,10 @@ public final class Constant<T> extends PrimitiveOp implements Operand<T> {
    * @throws IllegalArgumentException If the tensor datatype or shape is not compatible with the
    *     buffer
    */
-  public static <T> Constant<T> create(Scope scope, Class<T> type, long[] shape, ByteBuffer data) {
-    try (Tensor<T> value = Tensor.create(type, shape, data)) {
-      return createWithTensor(scope, value);
+  public static <T extends Tensor<U>, U> Constant<T> create(Scope scope, DataType<T> dataType,
+      NdArray<U> data) {
+    try (T t = Tensors.copyOf(dataType, data)) {
+      return create(scope, t);
     }
   }
 
@@ -631,19 +241,13 @@ public final class Constant<T> extends PrimitiveOp implements Operand<T> {
    * @return a constant of type `type`
    * @see org.tensorflow.Tensor#create(Object) Tensor.create
    */
-  public static <T> Constant<T> create(Scope scope, Object object, Class<T> type) {
-    try (Tensor<T> value = Tensor.create(object, type)) {
-      return createWithTensor(scope, value);
-    }
-  }
-
-  private static <T> Constant<T> createWithTensor(Scope scope, Tensor<T> value) {
-    return new Constant<T>(
+  public static <T extends Tensor<?>> Constant<T> create(Scope scope, T tensor) {
+    return new Constant<>(
         scope
             .env()
             .opBuilder("Const", scope.makeOpName("Const"))
-            .setAttr("value", value)
-            .setAttr("dtype", value.dataType())
+            .setAttr("value", tensor)
+            .setAttr("dtype", tensor.dataType())
             .build());
   }
 

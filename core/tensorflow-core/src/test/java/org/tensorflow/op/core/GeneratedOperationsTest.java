@@ -18,15 +18,17 @@ package org.tensorflow.op.core;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.tensorflow.graph.Graph;
+import org.tensorflow.Graph;
 import org.tensorflow.Operand;
-import org.tensorflow.graph.Session;
+import org.tensorflow.Session;
 import org.tensorflow.Tensor;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.Ops;
+import org.tensorflow.types.TInt32;
 
 @RunWith(JUnit4.class)
 public final class GeneratedOperationsTest {
@@ -36,9 +38,9 @@ public final class GeneratedOperationsTest {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
       Ops ops = Ops.create(g);
-      Operand<Integer> x = ops.math().add(ops.constant(1), ops.constant(2));
-      try (Tensor<Integer> result = sess.runner().fetch(x).run().get(0).expect(Integer.class)) {
-        assertEquals(3, result.intValue());
+      Operand<TInt32> x = ops.math().add(ops.constant(1), ops.constant(2));
+      try (TInt32 result = sess.runner().fetch(x).run().get(0).expect(TInt32.DTYPE)) {
+        assertEquals(Integer.valueOf(3), result.get());
       }
     }
   }
@@ -48,13 +50,13 @@ public final class GeneratedOperationsTest {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
       Ops ops = Ops.create(g);
-      ArrayList<Operand<Integer>> inputs = new ArrayList<Operand<Integer>>();
+      ArrayList<Operand<Integer>> inputs = new ArrayList<>();
       inputs.add(ops.constant(1));
       inputs.add(ops.constant(2));
       inputs.add(ops.constant(3));
-      Operand<Integer> x = ops.math().addN(inputs);
-      try (Tensor<Integer> result = sess.runner().fetch(x).run().get(0).expect(Integer.class)) {
-        assertEquals(6, result.intValue());
+      Operand<TInt32> x = ops.math().addN(inputs);
+      try (TInt32 result = sess.runner().fetch(x).run().get(0).expect(TInt32.DTYPE)) {
+        assertEquals(Integer.valueOf(6), result.get());
       }
     }
   }
@@ -71,15 +73,15 @@ public final class GeneratedOperationsTest {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
       Ops ops = Ops.create(g);
-      Operand<Integer> variable = ops.variable(Shape.scalar(), Integer.class);
+      Operand<TInt32> variable = ops.variable(Shape.make(), TInt32.DTYPE);
       Operand<?> initVariable = ops.assign(variable, ops.constant(0));
-      ArrayList<Operand<?>> controls = new ArrayList<Operand<?>>();
+      List<Operand<?>> controls = new ArrayList<>();
       controls.add(ops.assign(variable, ops.constant(3)));
-      Operand<Integer> x =
+      Operand<TInt32> x =
           ops.withControlDependencies(controls).math().add(variable, ops.constant(0));
       sess.runner().addTarget(initVariable).run();
-      try (Tensor<Integer> result = sess.runner().fetch(x).run().get(0).expect(Integer.class); ) {
-        assertEquals(3, result.intValue());
+      try (TInt32 result = sess.runner().fetch(x).run().get(0).expect(TInt32.DTYPE)) {
+        assertEquals(Integer.valueOf(3), result.get());
       }
     }
   }

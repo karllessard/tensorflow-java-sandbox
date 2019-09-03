@@ -34,7 +34,7 @@ public final class FloatJdkDataBuffer extends
     AbstractJdkDataBuffer<Float, FloatDataBuffer> implements FloatDataBuffer {
 
   /**
-   * The maximum capacity for a buffer of this type, i.e. the maximum number of bytes it can store.
+   * The maximum capacity for a buffer of this type, i.e. the maximum number of floats it can store.
    * <p>
    * As the maximum capacity may vary depending on the JVM implementation and on the platform, this
    * property returns a value that is safe for most of them.

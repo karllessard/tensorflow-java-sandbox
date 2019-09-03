@@ -15,7 +15,7 @@ limitations under the License.
 
 package org.tensorflow;
 
-import org.tensorflow.types.DataType;
+import org.tensorflow.nio.nd.Shape;
 
 /**
  * Base class for {@link Operation} implementations.
@@ -36,7 +36,7 @@ public abstract class AbstractOperation implements Operation {
 
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public <T extends DataType<?>> Output<T> output(int idx) {
+  public <T> Output<T> output(int idx) {
     return new Output(this, idx);
   }
 
@@ -68,7 +68,7 @@ public abstract class AbstractOperation implements Operation {
    * @param outputIdx index of the output of this operation
    * @return output tensor shape
    */
-  protected abstract long[] shape(int outputIdx);
+  protected abstract Shape shape(int outputIdx);
 
   /**
    * Returns the datatype of the tensor of the {@code outputIdx}th output of this operation.

@@ -15,8 +15,6 @@ limitations under the License.
 
 package org.tensorflow;
 
-import org.tensorflow.graph.Session;
-
 /**
  * An in-process TensorFlow server, for use in distributed training.
  *

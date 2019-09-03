@@ -16,13 +16,18 @@
  */
 package org.tensorflow.types;
 
-public class TFloat extends DecimalType<Float> {
+import java.nio.ByteBuffer;
+import org.tensorflow.DataType;
+import org.tensorflow.Tensor;
+import org.tensorflow.nio.buffer.DataBuffers;
+import org.tensorflow.nio.nd.Shape;
+import org.tensorflow.types.family.Decimal;
 
-  public static final TFloat TYPE = new TFloat();
+public class TFloat extends Tensor<Float> implements Decimal {
 
-  static final int ORDINAL = 1;
+  public static final DataType<TFloat> DTYPE = DataType.make(1, 4, TFloat::new);
 
-  private TFloat() {
-    super(Float.class, ORDINAL, 4);
+  private TFloat(Shape shape, long handle, ByteBuffer rawBuffer) {
+    super(DTYPE, shape, handle, DataBuffers.wrap(rawBuffer.asFloatBuffer()));
   }
 }

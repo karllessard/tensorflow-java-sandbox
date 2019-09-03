@@ -16,13 +16,19 @@
  */
 package org.tensorflow.types;
 
-public class TDouble extends DecimalType<Double> {
+import java.nio.ByteBuffer;
+import org.tensorflow.DataType;
+import org.tensorflow.Tensor;
+import org.tensorflow.nio.buffer.DataBuffers;
+import org.tensorflow.nio.nd.Shape;
+import org.tensorflow.types.family.Decimal;
 
-  public static final TDouble TYPE = new TDouble();
+public class TDouble extends Tensor<Double> implements Decimal {
 
-  static final int ORDINAL = 2;
+  public static final DataType<TDouble> DTYPE = DataType.make(2, 8, TDouble::new);
 
-  private TDouble() {
-    super(Double.class, ORDINAL, 8);
+  private TDouble(Shape shape, long handle, ByteBuffer rawBuffer) {
+    super(DTYPE, shape, handle, DataBuffers.wrap(rawBuffer.asDoubleBuffer()));
   }
 }
+

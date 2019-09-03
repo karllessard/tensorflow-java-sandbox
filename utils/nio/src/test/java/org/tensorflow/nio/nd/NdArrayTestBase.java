@@ -18,12 +18,20 @@ package org.tensorflow.nio.nd;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.tensorflow.nio.StaticApi.*;
+import static org.tensorflow.nio.StaticApi.all;
+import static org.tensorflow.nio.StaticApi.at;
+import static org.tensorflow.nio.StaticApi.even;
+import static org.tensorflow.nio.StaticApi.flip;
+import static org.tensorflow.nio.StaticApi.from;
+import static org.tensorflow.nio.StaticApi.odd;
+import static org.tensorflow.nio.StaticApi.range;
+import static org.tensorflow.nio.StaticApi.seq;
+import static org.tensorflow.nio.StaticApi.shape;
+import static org.tensorflow.nio.StaticApi.to;
 
 import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
 import java.util.stream.LongStream;
-
 import org.junit.Test;
 import org.tensorflow.nio.buffer.DataBuffer;
 
@@ -216,7 +224,7 @@ public abstract class NdArrayTestBase<T> {
     assertEquals(val100, scalar100.get());
 
     // Slice scalar (1,0,z)
-    LongNdArray z = NdArrays.wrap(new long[]{2L}, shape());
+    NdArray<Long> z = NdArrays.wrap(new long[]{2L}, shape());
     NdArray<T> scalar102 = matrix3d.slice(at(1), at(0), at(z));
     assertEquals(scalar102.shape(), shape());
     assertEquals(val102, scalar102.get());

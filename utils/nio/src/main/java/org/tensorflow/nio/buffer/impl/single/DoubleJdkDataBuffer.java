@@ -36,7 +36,8 @@ public final class DoubleJdkDataBuffer extends
     AbstractJdkDataBuffer<Double, DoubleDataBuffer> implements DoubleDataBuffer {
 
   /**
-   * The maximum capacity for a buffer of this type, i.e. the maximum number of bytes it can store.
+   * The maximum capacity for a buffer of this type, i.e. the maximum number of doubles it can
+   * store.
    * <p>
    * As the maximum capacity may vary depending on the JVM implementation and on the platform, this
    * property returns a value that is safe for most of them.

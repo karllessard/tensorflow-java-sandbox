@@ -16,13 +16,17 @@
  */
 package org.tensorflow.types;
 
-public class TString extends DataType<String> {
+import java.nio.ByteBuffer;
+import org.tensorflow.DataType;
+import org.tensorflow.Tensor;
+import org.tensorflow.memory.StringTensorBuffer;
+import org.tensorflow.nio.nd.Shape;
 
-  public static final TString TYPE = new TString();
+public class TString extends Tensor<String> {
 
-  static final int ORDINAL = 7;
+  public static final DataType<TString> DTYPE = DataType.make(7, -1, TString::new);
 
-  private TString() {
-    super(String.class, ORDINAL, -1);
+  private TString(Shape shape, long handle, ByteBuffer rawBuffer) {
+    super(DTYPE, shape, handle, new StringTensorBuffer(rawBuffer));
   }
 }

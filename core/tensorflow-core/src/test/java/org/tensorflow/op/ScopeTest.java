@@ -25,12 +25,20 @@ import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.tensorflow.graph.Graph;
+import org.tensorflow.DataType;
+import org.tensorflow.Graph;
 import org.tensorflow.Output;
-import org.tensorflow.graph.Session;
+import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.Tensors;
-import org.tensorflow.types.UInt8;
+import org.tensorflow.nio.nd.Shape;
+import org.tensorflow.types.TBool;
+import org.tensorflow.types.TDouble;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.TUInt8;
 
 /** Unit tests for {@link org.tensorflow.Scope}. */
 @RunWith(JUnit4.class)
@@ -127,13 +135,13 @@ public class ScopeTest {
   public void basic() {
     try (Graph g = new Graph()) {
       Scope s = new Scope(g);
-      Const<Integer> c1 = Const.create(s, 42);
+      Const<TInt32> c1 = Const.create(s, 42);
       assertEquals("Const", c1.output().op().name());
-      Const<Integer> c2 = Const.create(s, 7);
+      Const<TInt32> c2 = Const.create(s, 7);
       assertEquals("Const_1", c2.output().op().name());
-      Const<Integer> c3 = Const.create(s.withName("four"), 4);
+      Const<TInt32> c3 = Const.create(s.withName("four"), 4);
       assertEquals("four", c3.output().op().name());
-      Const<Integer> c4 = Const.create(s.withName("four"), 4);
+      Const<TInt32> c4 = Const.create(s.withName("four"), 4);
       assertEquals("four_1", c4.output().op().name());
     }
   }
@@ -153,11 +161,11 @@ public class ScopeTest {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
       Scope s = new Scope(g);
-      Output<Integer> data =
-          Const.create(s.withName("data"), new int[] {600, 470, 170, 430, 300}).output();
+      Output<TInt32> data =
+          Const.create(s.withName("data"), Tensors.vector(new int[] {600, 470, 170, 430, 300})).output();
 
       // Create a composite op with a customized name
-      Variance<Integer> var1 = Variance.create(s.withName("example"), data, Integer.class);
+      Variance<TInt32> var1 = Variance.create(s.withName("example"), data, TInt32.DTYPE);
       assertEquals("example/variance", var1.output().op().name());
 
       // Confirm internally added ops have the right names.
@@ -166,7 +174,7 @@ public class ScopeTest {
       // assertNotNull(g.operation("example/zero"));
 
       // Same composite op with a default name
-      Variance<Integer> var2 = Variance.create(s, data, Integer.class);
+      Variance<TInt32> var2 = Variance.create(s, data, TInt32.DTYPE);
       assertEquals("variance/variance", var2.output().op().name());
 
       // Confirm internally added ops have the right names.
@@ -175,11 +183,10 @@ public class ScopeTest {
       // assertNotNull(g.operation("variance/zero"));
 
       // Verify correct results as well.
-      Tensor<Integer> result =
-          sess.runner().fetch(var1.output()).run().get(0).expect(Integer.class);
-      assertEquals(21704, result.intValue());
-      result = sess.runner().fetch(var2.output()).run().get(0).expect(Integer.class);
-      assertEquals(21704, result.intValue());
+      TInt32 result = sess.runner().fetch(var1.output()).run().get(0).expect(TInt32.DTYPE);
+      assertEquals(Integer.valueOf(21704), result.get());
+      result = sess.runner().fetch(var2.output()).run().get(0).expect(TInt32.DTYPE);
+      assertEquals(Integer.valueOf(21704), result.get());
     }
   }
 
@@ -187,34 +194,26 @@ public class ScopeTest {
   private static final class Const<T> {
     private final Output<T> output;
 
-    static Const<Integer> create(Scope s, int v) {
-      return create(s, Tensors.create(v));
+    static Const<TInt32> create(Scope s, int v) {
+      return create(s, Tensors.scalar(v));
     }
 
-    static Const<Integer> create(Scope s, int[] v) {
-      return create(s, Tensors.create(v));
+    static Const<TInt32> create(Scope s, int[] v) {
+      return create(s, Tensors.vector(v));
     }
 
-    static <T> Const<T> create(Scope s, Tensor<T> value) {
-      return new Const<T>(
+    static <T extends Tensor<?>> Const<T> create(Scope s, T value) {
+      return new Const<>(
           s.env()
               .opBuilder("Const", s.makeOpName("Const"))
               .setAttr("dtype", value.dataType())
               .setAttr("value", value)
               .build()
-              .<T>output(0));
+              .output(0));
     }
 
-    static <T> Const<T> create(Scope s, Object v, Class<T> type) {
-      try (Tensor<T> value = Tensor.create(v, type)) {
-        return new Const<T>(
-            s.env()
-                .opBuilder("Const", s.makeOpName("Const"))
-                .setAttr("dtype", value.dataType())
-                .setAttr("value", value)
-                .build()
-                .<T>output(0));
-      }
+    static <T extends Tensor<?>> Const<T> zero(Scope s, DataType<T> dataType) {
+      return create(s, Tensors.of(dataType, Shape.make()));
     }
 
     Const(Output<T> o) {
@@ -230,13 +229,13 @@ public class ScopeTest {
     private final Output<T> output;
 
     static <T> Mean<T> create(Scope s, Output<T> input, Output<T> reductionIndices) {
-      return new Mean<T>(
+      return new Mean<>(
           s.env()
               .opBuilder("Mean", s.makeOpName("Mean"))
               .addInput(input)
               .addInput(reductionIndices)
               .build()
-              .<T>output(0));
+              .output(0));
     }
 
     Mean(Output<T> o) {
@@ -258,7 +257,7 @@ public class ScopeTest {
               .addInput(x)
               .addInput(y)
               .build()
-              .<T>output(0));
+              .output(0));
     }
 
     SquaredDifference(Output<T> o) {
@@ -270,34 +269,12 @@ public class ScopeTest {
     }
   }
 
-  /**
-   * Returns the zero value of type described by {@code c}, or null if the type (e.g., string) is
-   * not numeric and therefore has no zero value.
-   *
-   * @param c The class describing the TensorFlow type of interest.
-   */
-  public static Object zeroValue(Class<?> c) {
-    return zeros.get(c);
-  }
-
-  private static final Map<Class<?>, Object> zeros = new HashMap<>();
-
-  static {
-    zeros.put(Float.class, 0.0f);
-    zeros.put(Double.class, 0.0);
-    zeros.put(Integer.class, 0);
-    zeros.put(UInt8.class, (byte) 0);
-    zeros.put(Long.class, 0L);
-    zeros.put(Boolean.class, false);
-    zeros.put(String.class, null); // no zero value
-  }
-
   private static final class Variance<T> {
     private final Output<T> output;
 
-    static <T> Variance<T> create(Scope base, Output<T> x, Class<T> type) {
+    static <T extends Tensor<?>> Variance<T> create(Scope base, Output<T> x, DataType<T> type) {
       Scope s = base.withSubScope("variance");
-      Output<T> zero = Const.create(base, zeroValue(type), type).output();
+      Output<T> zero = Const.zero(s, type).output();
       Output<T> sqdiff =
           SquaredDifference.create(
                   s.withName("squared_deviation"), x, Mean.create(s, x, zero).output())

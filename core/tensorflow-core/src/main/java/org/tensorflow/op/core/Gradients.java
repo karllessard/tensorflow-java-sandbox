@@ -19,14 +19,15 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.tensorflow.graph.Graph;
+import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.DataType;
+import org.tensorflow.DataType;
 
 /**
  * Adds operations to compute the partial derivatives of sum of {@code y}s w.r.t {@code x}s,
@@ -157,7 +158,7 @@ public class Gradients implements Op, Iterable<Operand<?>> {
    * @param index The index of the output among the gradients added by this operation
    */
   @SuppressWarnings("unchecked")
-  public <T extends DataType<?>> Output<T> dy(int index) {
+  public <T extends Tensor<?>> Output<T> dy(int index) {
     return (Output<T>) dy.get(index);
   }
 

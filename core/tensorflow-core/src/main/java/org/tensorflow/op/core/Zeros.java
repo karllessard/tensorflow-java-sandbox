@@ -21,8 +21,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.DataType;
-import org.tensorflow.types.NumberType;
+import org.tensorflow.types.family.Numeric;
 
 /**
  * An operator creating a constant initialized with zeros of the shape given by `dims`.
@@ -35,7 +34,7 @@ import org.tensorflow.types.NumberType;
  * @param <T> constant type
  */
 @Operator
-public class Zeros<T extends DataType<?>> implements Op, Operand<T> {
+public class Zeros<T> implements Op, Operand<T> {
 
   /**
    * Creates a zeroed tensor given its type and shape.
@@ -46,7 +45,7 @@ public class Zeros<T extends DataType<?>> implements Op, Operand<T> {
    * @return a constant tensor initialized with zeros
    * @throws IllegalArgumentException if the tensor type or shape cannot be initialized with zeros.
    */
-  public static <T extends DataType<?>, U extends NumberType<?>> Zeros<T> create(Scope scope, Operand<U> dims, T type) {
+  public static <T, U extends Numeric> Zeros<T> create(Scope scope, Operand<U> dims, DataType<T> type) {
     Scope childScope = scope.withSubScope("Zeros"); // If scope had an op name set, it will prevail on "Zeros"
     int zeroSize = type.byteSize();
     if (zeroSize < 0) {

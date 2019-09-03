@@ -15,8 +15,6 @@ limitations under the License.
 
 package org.tensorflow;
 
-import org.tensorflow.types.DataType;
-
 /**
  * Interface implemented by operands of a TensorFlow operation.
  *
@@ -24,7 +22,7 @@ import org.tensorflow.types.DataType;
  *
  * <pre>{@code
  * // The "decodeJpeg" operation can be used as an operand to the "cast" operation
- * Operand<UInt8> decodeJpeg = ops.image().decodeJpeg(...);
+ * Operand<TUInt8> decodeJpeg = ops.image().decodeJpeg(...);
  * ops.math().cast(decodeJpeg, DataType.FLOAT);
  *
  * // The output "y" of the "unique" operation can be used as an operand to the "cast" operation
@@ -36,7 +34,7 @@ import org.tensorflow.types.DataType;
  * ops.array().concat(0, split);
  * }</pre>
  */
-public interface Operand<T extends DataType<?>> {
+public interface Operand<T> {
 
   /**
    * Returns the symbolic handle of a tensor.
@@ -47,4 +45,8 @@ public interface Operand<T extends DataType<?>> {
    * @see OperationBuilder#addInput(Output)
    */
   Output<T> asOutput();
+
+  default T tensor() {
+    return asOutput().tensor();
+  }
 }

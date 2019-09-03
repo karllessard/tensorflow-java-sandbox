@@ -33,8 +33,8 @@ import java.nio.LongBuffer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.tensorflow.eager.EagerSession;
-import org.tensorflow.types.UInt8;
+import org.tensorflow.types.TUInt8;
+
 import static org.tensorflow.StaticApi.*;
 
 /** Unit tests for {@link org.tensorflow.Tensor}. */
@@ -422,7 +422,7 @@ public class TensorTest {
   @Test
   public void testUInt8Tensor() {
     byte[] vector = new byte[] {1, 2, 3, 4};
-    try (Tensor<UInt8> t = Tensor.create(vector, UInt8.class)) {
+    try (Tensor<TUInt8> t = Tensor.create(vector, TUInt8.class)) {
       assertEquals(DataType.UINT8, t.dataType());
       assertEquals(1, t.numDimensions());
       assertArrayEquals(new long[] {4}, t.shape());

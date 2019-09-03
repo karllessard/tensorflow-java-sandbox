@@ -18,15 +18,12 @@ package org.tensorflow;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
-import org.tensorflow.graph.Graph;
-import org.tensorflow.graph.GraphOperation;
-import org.tensorflow.types.DataType;
-import org.tensorflow.types.Int32;
+import org.tensorflow.types.TInt32;
 
 /** Static utility functions. */
 public class TestUtil {
 
-  public static final class AutoCloseableList<E extends AutoCloseable> extends ArrayList<E>
+  public static final class AutoCloseableList<E extends Tensor<?>> extends ArrayList<E>
       implements AutoCloseable {
     public AutoCloseableList(Collection<? extends E> c) {
       super(c);
@@ -48,34 +45,34 @@ public class TestUtil {
     }
   }
 
-  public static GraphOperation constantOp(Graph g, String name, Object value) {
-    try (Tensor<?> t = Tensor.create(value)) {
+  public static GraphOperation constantOp(Graph g, String name, int value) {
+    try (TInt32 t = Tensors.scalar(value)) {
       return g.opBuilder("Const", name).setAttr("dtype", t.dataType()).setAttr("value", t).build();
     }
   }
 
-  public static <T extends DataType<?>> Output<T> constant(ExecutionEnvironment env, String name, Object value) {
-    try (Tensor<?> t = Tensor.create(value)) {
-      return env.opBuilder("Const", name)
-          .setAttr("dtype", t.dataType())
-          .setAttr("value", t)
-          .build()
-          .output(0);
-    }
+  public static <T extends Tensor<?>> Output<T> constant(ExecutionEnvironment env, String name, T t) {
+    Output<T> output = env.opBuilder("Const", name)
+        .setAttr("dtype", t.dataType())
+        .setAttr("value", t)
+        .build()
+        .output(0);
+    t.close();
+    return output;
   }
 
-  public static <T extends DataType<?>> Output<T> placeholder(Graph g, String name, T type) {
+  public static <T extends Tensor<?>> Output<T> placeholder(Graph g, String name, DataType<T> type) {
     return g.opBuilder("Placeholder", name)
         .setAttr("dtype", type)
         .build()
         .output(0);
   }
 
-  public static <T extends DataType<?>> Output<T> addN(ExecutionEnvironment env, Output<?>... inputs) {
+  public static <T extends Tensor<?>> Output<T> addN(ExecutionEnvironment env, Output<?>... inputs) {
     return env.opBuilder("AddN", "AddN").addInputList(inputs).build().output(0);
   }
 
-  public static <T extends DataType<?>> Output<T> matmul(
+  public static <T extends Tensor<?>> Output<T> matmul(
       Graph g, String name, Output<T> a, Output<T> b, boolean transposeA, boolean transposeB) {
     return g.opBuilder("MatMul", name)
         .addInput(a)
@@ -88,22 +85,22 @@ public class TestUtil {
 
   public static Operation split(Graph g, String name, int[] values, int numSplit) {
     return g.opBuilder("Split", name)
-        .addInput(constant(g, "split_dim", 0))
-        .addInput(constant(g, "values", values))
+        .addInput(constant(g, "split_dim", Tensors.scalar(0)))
+        .addInput(constant(g, "values", Tensors.vector(values)))
         .setAttr("num_split", numSplit)
         .build();
   }
   
-  public static <T extends DataType<?>> Output<T> square(Graph g, String name, Output<T> value) {
+  public static <T> Output<T> square(Graph g, String name, Output<T> value) {
     return g.opBuilder("Square", name)
         .addInput(value)
         .build()
         .output(0);
   }
 
-  public static void transpose_A_times_X(Graph g, int[][] a) {
-    Output<Int32> aa = constant(g, "A", a);
-    matmul(g, "Y", aa, placeholder(g, "X", Int32.TYPE), true, false);
+  public static void transpose_A_times_X(Graph g, TInt32 a) {
+    Output<TInt32> aa = constant(g, "A", a);
+    matmul(g, "Y", aa, placeholder(g, "X", TInt32.DTYPE), true, false);
   }
 
   /**

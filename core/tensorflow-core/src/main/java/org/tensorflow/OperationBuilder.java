@@ -15,9 +15,7 @@ limitations under the License.
 
 package org.tensorflow;
 
-import org.tensorflow.graph.Session;
 import org.tensorflow.nio.nd.Shape;
-import org.tensorflow.types.DataType;
 
 /**
  * A builder for {@link Operation}s.
